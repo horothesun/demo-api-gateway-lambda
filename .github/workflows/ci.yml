@@ -41,24 +41,21 @@ jobs:
 #      - name: Run tests
 #        run: sbt test
 
-      - name: Build Docker image
-        run: |
-          docker build --tag "${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}" \
-            --build-arg "JAVA_VERSION=${JAVA_VERSION}" \
-            --build-arg "SBT_VERSION=${SBT_VERSION}" \
-            --file ./Dockerfile .
-#          docker tag "${GITHUB_SHA}" "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
           aws-region: ${{ env.LOGIN_AWS_REGION }}
 
-      - name: Push ECR image
+      - name: Build and push image
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
+          docker build --tag "${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}" \
+            --build-arg "JAVA_VERSION=${JAVA_VERSION}" \
+            --build-arg "SBT_VERSION=${SBT_VERSION}" \
+            --file ./Dockerfile .
+#         docker tag "${GITHUB_SHA}" "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
           aws ecr get-login-password --region "${LOGIN_AWS_REGION}" | \
             docker login --username "AWS" --password-stdin "${ECR_REGISTRY}"
           docker push "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
