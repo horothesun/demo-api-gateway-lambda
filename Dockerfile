@@ -29,14 +29,6 @@ RUN sbt clean assembly
 
 FROM public.ecr.aws/lambda/java:${JAVA_VERSION}
 
-# TODO: still possible/necessary for AWS Lambda Java runtime? 🔥🔥🔥
-# create and run as a non-root user:
-#RUN useradd -m appuser
-#WORKDIR /home/appuser
-#USER appuser
-
-#COPY --from=builder --chown=appuser /work/target/scala-2.13/demo-api-gateway-lambda.jar app.jar
-
 COPY --from=builder /work/target/scala-2.13/demo-api-gateway-lambda.jar ${LAMBDA_TASK_ROOT}/lib/
 
 CMD ["com.horothesun.demo.LambdaHandler::handleRequest"]

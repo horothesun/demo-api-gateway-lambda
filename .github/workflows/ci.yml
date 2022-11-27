@@ -36,7 +36,7 @@ jobs:
       - name: Get sbt version
         run: |
           SBT_VERSION=$(cat project/build.properties | grep "sbt.version=" | grep -o "[^=]*$")
-          [[ -z "${SBT_VERSION}" ]] && echo "Error: SBT_VERSION not found in Dockerfile" && exit 123
+          [[ -z "${SBT_VERSION}" ]] && echo "Error: SBT_VERSION not found in project/build.properties" && exit 123
           echo "SBT_VERSION=${SBT_VERSION}" >> "${GITHUB_ENV}"
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
