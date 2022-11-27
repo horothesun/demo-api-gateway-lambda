@@ -18,5 +18,12 @@ docker build --tag <REPOSITORY:TAG> \
 Run the image with
 
 ```bash
-docker run --rm --publish 8080:9000 <REPOSITORY:TAG>
+docker run --rm --publish 9000:8080 <REPOSITORY:TAG>
+```
+
+and test it with
+
+```bash
+curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
+  -d '{"payload":"hello world!"}'
 ```

@@ -1,10 +1,10 @@
 package com.horothesun.demo
 
-import cats.effect.{IO, IOApp, Resource}
+import cats.effect.{IO, Resource}
 
-object Main extends IOApp.Simple {
+object Main {
 
-  override def run: IO[Unit] =
+  def run: IO[String] =
     dependencies.use { clock =>
       Logic(clock).appLogic
     }
