@@ -7,8 +7,6 @@ on:
     branches: [ "master" ]
 
 env:
-  JAVA_VERSION: "11"
-  SBT_VERSION: "1.8.0"
   LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
   ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
   IMAGE_LATEST_TAG: "latest"
@@ -28,6 +26,18 @@ jobs:
     steps:
 
       - uses: actions/checkout@v3
+
+      - name: Get JDK version
+        run: |
+          JAVA_VERSION=$(cat Dockerfile | grep "ARG JAVA_VERSION=" | grep -o "[^=]*$")
+          [[ -z "${JAVA_VERSION}" ]] && echo "Error: JAVA_VERSION not found in Dockerfile" && exit 123
+          echo "JAVA_VERSION=${JAVA_VERSION}" >> "${GITHUB_ENV}"
+
+      - name: Get sbt version
+        run: |
+          SBT_VERSION=$(cat project/build.properties | grep "sbt.version=" | grep -o "[^=]*$")
+          [[ -z "${SBT_VERSION}" ]] && echo "Error: SBT_VERSION not found in Dockerfile" && exit 123
+          echo "SBT_VERSION=${SBT_VERSION}" >> "${GITHUB_ENV}"
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v3
