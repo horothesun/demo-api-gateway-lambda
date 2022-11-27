@@ -60,5 +60,4 @@ jobs:
           docker tag "${IMAGE_ID}" "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
           aws ecr get-login-password --region "${LOGIN_AWS_REGION}" | \
             docker login --username "AWS" --password-stdin "${ECR_REGISTRY}"
-          docker images
-          docker push "${ECR_REGISTRY}/${ECR_REPO_NAME}"
+          docker push "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
