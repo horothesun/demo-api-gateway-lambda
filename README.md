@@ -24,6 +24,8 @@ docker run --rm --publish 9000:8080 <REPOSITORY:TAG>
 and test it with
 
 ```bash
-curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
-  -d '{"payload":"hello world!"}'
+curl --silent \
+  --request "POST" "http://localhost:9000/2015-03-31/functions/function/invocations" \
+  --data '{"payload":"hello world!"}' | \
+  jq --raw-output '.' | jq '.'
 ```
