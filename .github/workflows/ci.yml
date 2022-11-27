@@ -49,7 +49,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
-          aws-region: ${{ env.LOGIN_AWS_REGION }}
+          aws-region: ${{ secrets.LOGIN_AWS_REGION }}
 
       - name: Push ECR image
         env:
