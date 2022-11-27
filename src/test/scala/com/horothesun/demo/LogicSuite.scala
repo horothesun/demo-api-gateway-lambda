@@ -9,7 +9,7 @@ import java.time.{LocalDateTime, Month}
 class LogicSuite extends CatsEffectSuite {
 
   test("1 + 1 = 2") {
-    assertEquals(1 + 1, 3)
+    assertEquals(1 + 1, 2)
   }
 
 }
