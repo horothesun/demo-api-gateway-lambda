@@ -2,7 +2,7 @@ import sbtassembly.MergeStrategy
 
 ThisBuild / organization     := "com.horothesun"
 ThisBuild / organizationName := "horothesun"
-ThisBuild / scalaVersion     := "3.2.1"
+ThisBuild / scalaVersion     := "2.13.10"
 
 val demoApiGatewayLambdaName = "demo-api-gateway-lambda"
 

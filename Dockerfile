@@ -35,8 +35,8 @@ FROM public.ecr.aws/lambda/java:${JAVA_VERSION}
 #WORKDIR /home/appuser
 #USER appuser
 
-#COPY --from=builder --chown=appuser /work/target/scala-3.2.1/demo-api-gateway-lambda.jar app.jar
+#COPY --from=builder --chown=appuser /work/target/scala-2.13/demo-api-gateway-lambda.jar app.jar
 
-COPY --from=builder /work/target/scala-3.2.1/demo-api-gateway-lambda.jar ${LAMBDA_TASK_ROOT}/lib/
+COPY --from=builder /work/target/scala-2.13/demo-api-gateway-lambda.jar ${LAMBDA_TASK_ROOT}/lib/
 
 CMD ["com.horothesun.demo.LambdaHandler::handleRequest"]

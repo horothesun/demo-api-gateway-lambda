@@ -1,22 +1,40 @@
 package com.horothesun.demo
 
+import cats.implicits._
+import cats.effect.{IO, Resource}
 import cats.effect.unsafe.implicits.global
 import com.google.gson._
 import com.amazonaws.services.lambda.runtime._
 
-class LambdaHandler() extends RequestHandler[java.util.Map[String, String], String] {
+final class LambdaHandler extends RequestHandler[java.util.Map[String, String], String] {
 
   val gson: Gson = new GsonBuilder().setPrettyPrinting().create
 
-  override def handleRequest(event: java.util.Map[String, String], context: Context): String = {
-    val logger = context.getLogger
+  override def handleRequest(event: java.util.Map[String, String], context: Context): String =
+    run(event, context).unsafeRunSync()
 
-    logger.log(s"ENVIRONMENT VARIABLES: ${gson.toJson(System.getenv)}\n")
-    logger.log(s"CONTEXT: ${gson.toJson(context)}\n")
+  def run(event: java.util.Map[String, String], context: Context): IO[String] =
+    IO(
+      List(
+        s"ENVIRONMENT VARIABLES: ${gson.toJson(System.getenv)}",
+        s"CONTEXT: ${gson.toJson(context)}",
+        s"EVENT: ${gson.toJson(event)}"
+      )
+    )
+      .flatMap { ms =>
+        val logger = context.getLogger
+        ms.traverse_(m => logLn(logger, m))
+      }
+      .flatMap(_ =>
+        dependencies.use { clock =>
+          Logic(clock).appLogic
+        }
+      )
 
-    logger.log(s"EVENT: ${gson.toJson(event)}\n")
+  def dependencies: Resource[IO, Clock] =
+    Resource.pure[IO, Clock](Clock.create)
 
-    Main.run.unsafeRunSync()
-  }
+  def logLn(logger: LambdaLogger, message: String): IO[Unit] =
+    IO(logger.log(s"$message\n"))
 
 }

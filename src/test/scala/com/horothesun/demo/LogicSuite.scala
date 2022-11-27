@@ -1,15 +1,16 @@
 package com.horothesun.demo
 
 import cats.effect.IO
-import cats.implicits._
 import LogicSuite.clockStub
 import munit.CatsEffectSuite
 import java.time.{LocalDateTime, Month}
 
 class LogicSuite extends CatsEffectSuite {
 
-  test("1 + 1 = 2") {
-    assertEquals(1 + 1, 2)
+  test("app logic returns correct local date-time JSON") {
+    val fakeLocalDateTime = LocalDateTime.of(2022, Month.APRIL, 15, 13, 33, 0)
+    Logic(clockStub(fakeLocalDateTime)).appLogic
+      .assertEquals("{\"server_date_time\":\"2022-04-15T13:33:00\"}")
   }
 
 }
