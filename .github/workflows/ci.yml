@@ -9,6 +9,7 @@ on:
 env:
   JAVA_VERSION: "11"
   SBT_VERSION: "1.8.0"
+  LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
   ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
   IMAGE_LATEST_TAG: "latest"
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.LOGIN_AWS_REGION }}.amazonaws.com
@@ -49,12 +50,11 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
-          aws-region: ${{ secrets.LOGIN_AWS_REGION }}
+          aws-region: ${{ env.LOGIN_AWS_REGION }}
 
       - name: Push ECR image
         env:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-          LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
         run: |
           aws ecr get-login-password --region "${LOGIN_AWS_REGION}" | \
             docker login --username "AWS" --password-stdin "${ECR_REGISTRY}"
