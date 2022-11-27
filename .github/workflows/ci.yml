@@ -6,26 +6,56 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  JAVA_VERSION: "11"
+  SBT_VERSION: "1.8.0"
+  ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
+  IMAGE_LATEST_TAG: "latest"
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.LOGIN_AWS_REGION }}.amazonaws.com
+
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  test:
+  build-test-push-image:
+    name: Build, test and push image
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
-      - name: Set up JDK 11
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: "adopt"
+
       - name: Run tests
         run: sbt test
 
-  scalafmt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Check
+      - name: Scalafmt check
         run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
+
+      - name: Build Docker image
+        run: |
+          docker build --tag "${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}" \
+            --build-arg "JAVA_VERSION=${JAVA_VERSION}" \
+            --build-arg "SBT_VERSION=${SBT_VERSION}" \
+            --file ./Dockerfile .
+          docker tag "${GITHUB_SHA}" "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
+          aws-region: ${{ env.LOGIN_AWS_REGION }}
+
+      - name: Push ECR image
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
+        run: |
+          aws ecr get-login-password --region "${LOGIN_AWS_REGION}" | \
+            docker login --username "AWS" --password-stdin "${ECR_REGISTRY}"
+          docker push "${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_LATEST_TAG}"
