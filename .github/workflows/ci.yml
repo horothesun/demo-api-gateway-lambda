@@ -59,9 +59,6 @@ jobs:
       - name: Scalafmt check
         run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
 
-      - name: Run tests
-        run: sbt test
-
       - name: Build image
         run: ./scripts/build_docker_image.sh
 
