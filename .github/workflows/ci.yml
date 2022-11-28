@@ -6,9 +6,14 @@ on:
   pull_request:
     branches: [ "master" ]
 
+
+permissions:
+  id-token: write
+  contents: read
+
 env:
   LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
-  ECR_REPO_AND_LATEST_TAG: ${{ secrets.ECR_REPO_NAME }}:latest
+  ECR_REPO_NAME_AND_LATEST_TAG: ${{ secrets.ECR_REPO_NAME }}:latest
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.LOGIN_AWS_REGION }}.amazonaws.com
 
 concurrency:
@@ -16,26 +21,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test-push-image:
-    name: Build, test and push image
+  build-test-push:
+    name: Build, test and push
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
+    timeout-minutes: 5
+    defaults:
+      run:
+        shell: "bash"
     steps:
 
       - uses: actions/checkout@v3
 
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@1.1.0
+        env:
+          SHELLCHECK_OPTS: --severity style --enable all --exclude SC2312 --shell bash
+        with:
+          check_together: yes
+          scandir: "./scripts"
+
       - name: Get JDK version
         run: |
-          JAVA_VERSION=$(cat Dockerfile | grep "ARG JAVA_VERSION=" | grep -o "[^=]*$")
-          [[ -z "${JAVA_VERSION}" ]] && echo "Error: JAVA_VERSION not found in Dockerfile" && exit 123
+          source scripts/get_java_version.sh
           echo "JAVA_VERSION=${JAVA_VERSION}" >> "${GITHUB_ENV}"
 
       - name: Get sbt version
         run: |
-          SBT_VERSION=$(cat project/build.properties | grep "sbt.version=" | grep -o "[^=]*$")
-          [[ -z "${SBT_VERSION}" ]] && echo "Error: SBT_VERSION not found in project/build.properties" && exit 123
+          source scripts/get_sbt_version.sh
           echo "SBT_VERSION=${SBT_VERSION}" >> "${GITHUB_ENV}"
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
@@ -51,24 +63,15 @@ jobs:
         run: sbt test
 
       - name: Build image
-        run: |
-          docker build --tag "${ECR_REPO_AND_LATEST_TAG}" \
-            --build-arg "SBT_VERSION=${SBT_VERSION}" \
-            --file ./Dockerfile .
-          IMAGE_ID=$(
-            docker images --format '{{json .}}' "${ECR_REPO_AND_LATEST_TAG}" | \
-              jq --raw-output '.ID'
-          )
-          docker tag "${IMAGE_ID}" "${ECR_REGISTRY}/${ECR_REPO_AND_LATEST_TAG}"
+        run: ./scripts/build_docker_image.sh
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
+        if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
         with:
           role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
           aws-region: ${{ env.LOGIN_AWS_REGION }}
 
       - name: Push image
-        run: |
-          aws ecr get-login-password --region "${LOGIN_AWS_REGION}" | \
-            docker login --username "AWS" --password-stdin "${ECR_REGISTRY}"
-          docker push "${ECR_REGISTRY}/${ECR_REPO_AND_LATEST_TAG}"
+        if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
+        run: ./scripts/push_image_to_ecr.sh
