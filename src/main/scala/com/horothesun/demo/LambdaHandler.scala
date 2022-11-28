@@ -25,7 +25,8 @@ class LambdaHandler extends RequestHandler[java.util.Map[String, String], String
     } yield s
   }
 
-  def logLn(logger: LambdaLogger, message: String): IO[Unit] = IO(logger.log(s"$message\n"))
+  def logLn(logger: LambdaLogger, message: => String): IO[Unit] =
+    IO(logger.log(s"$message\n"))
 
   def dependencies: Resource[IO, Clock] =
     Resource.pure[IO, Clock](Clock.create)
