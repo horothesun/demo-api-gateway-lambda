@@ -1,0 +1,9 @@
+#!/bin/bash
+
+[[ -z "${LOGIN_AWS_REGION}" ]] && echo "Error: LOGIN_AWS_REGION must be defined" && exit 10
+[[ -z "${ECR_REGISTRY}" ]] && echo "Error: ECR_REGISTRY must be defined" && exit 20
+[[ -z "${ECR_REPO_NAME_AND_LATEST_TAG}" ]] && echo "Error: ECR_REPO_NAME_AND_LATEST_TAG must be defined" && exit 30
+
+aws ecr get-login-password --region "${LOGIN_AWS_REGION}" | \
+  docker login --username "AWS" --password-stdin "${ECR_REGISTRY}"
+docker push "${ECR_REGISTRY}/${ECR_REPO_NAME_AND_LATEST_TAG}"
