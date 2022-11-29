@@ -2,6 +2,15 @@
 
 [![CI](https://github.com/horothesun/demo-api-gateway-lambda/workflows/CI/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
 
+## CI
+
+Secrets
+
+- `AWS_ACCOUNT_ID`
+- `ECR_REPO_NAME`
+- `LOGIN_AWS_REGION`
+- `PROD_CI_ROLE_ARN`
+
 ## Docker
 
 Build an image with
