@@ -8,7 +8,6 @@ object Dependencies {
     val betterMonadicFor = "0.3.1"
     val circe            = "0.14.3"
     val awsLambda        = "1.2.2"
-    val gson             = "2.10"
     val logbackClassic   = "1.4.5"
     val munitCatsEffect  = "1.0.7"
   }
@@ -18,10 +17,9 @@ object Dependencies {
     "org.typelevel" %% "cats-effect-kernel" % Version.catsEffect,
     "org.typelevel" %% "cats-effect-std"    % Version.catsEffect,
     compilerPlugin("com.olegpy" %% "better-monadic-for" % Version.betterMonadicFor),
-    "io.circe"            %% "circe-core"           % Version.circe,
-    "io.circe"            %% "circe-generic"        % Version.circe,
-    "com.amazonaws"        % "aws-lambda-java-core" % Version.awsLambda,
-    "com.google.code.gson" % "gson"                 % Version.gson
+    "io.circe"     %% "circe-core"           % Version.circe,
+    "io.circe"     %% "circe-generic"        % Version.circe,
+    "com.amazonaws" % "aws-lambda-java-core" % Version.awsLambda
   )
 
   lazy val logs: Seq[ModuleID] = Seq(
