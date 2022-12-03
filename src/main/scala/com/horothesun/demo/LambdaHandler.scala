@@ -5,17 +5,18 @@ import cats.effect.unsafe.implicits.global
 import com.amazonaws.services.lambda.runtime._
 import scala.jdk.CollectionConverters.MapHasAsScala
 
-class LambdaHandler extends RequestHandler[Object, String] {
+class LambdaHandler extends RequestHandler[java.util.Map[String, String], String] {
 
-  override def handleRequest(input: Object, context: Context): String =
-    run(input, context).unsafeRunSync()
+  override def handleRequest(input: java.util.Map[String, String], context: Context): String =
+    run(input.asScala.toMap, context).unsafeRunSync()
 
-  def run(input: Object, context: Context): IO[String] = {
+  def run(input: Map[String, String], context: Context): IO[String] = {
     def logLn(message: => String): IO[Unit] = IO(context.getLogger.log(s"$message\n"))
     for {
-      evs <- getEnvVars
-      _   <- logLn(s"ENVIRONMENT VARIABLES: ${evs.mkString("[\n  ", ",\n  ", "\n]")}")
-      _   <- logLn(s"EVENT: ${input.toString}")
+      env <- getEnvVars
+      _   <- logLn(s"ENVIRONMENT VARIABLES: ${env.mkString("[\n  ", "\n  ", "\n]")}")
+      _   <- logLn(s"CONTEXT: ${showContext(context)}")
+      _   <- logLn(s"INPUT: ${input.mkString("[\n  ", "\n  ", "\n]")}")
       s <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
@@ -27,5 +28,17 @@ class LambdaHandler extends RequestHandler[Object, String] {
 
   def getEnvVars: IO[Map[String, String]] =
     IO(System.getenv.asScala.toMap)
+
+  def showContext(c: Context): String =
+    "[\n" +
+      s"  request_id -> ${c.getAwsRequestId}\n" +
+      s"  log_group_name -> ${c.getLogGroupName}\n" +
+      s"  log_stream_name -> ${c.getLogStreamName}\n" +
+      s"  function_name -> ${c.getFunctionName}\n" +
+      s"  function_version -> ${c.getFunctionVersion}\n" +
+      s"  invoked_function_arn -> ${c.getInvokedFunctionArn}\n" +
+      s"  remaining_time_in_millis -> ${c.getRemainingTimeInMillis}\n" +
+      s"  memory_limit_in_mb -> ${c.getMemoryLimitInMB}\n" +
+      "]"
 
 }
