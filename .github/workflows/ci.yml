@@ -15,6 +15,7 @@ env:
   LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
   ECR_REPO_NAME_AND_LATEST_TAG: ${{ secrets.ECR_REPO_NAME }}:latest
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.LOGIN_AWS_REGION }}.amazonaws.com
+  LAMBDA_NAME: demo-api-gateway-lambda
 
 concurrency:
   group: ${{ github.ref }}
@@ -75,3 +76,7 @@ jobs:
       - name: Push image
         if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
         run: ./scripts/push_image_to_ecr.sh
+
+      - name: Update lambda
+        if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
+        run: ./scripts/update_lambda_image_uri.sh
