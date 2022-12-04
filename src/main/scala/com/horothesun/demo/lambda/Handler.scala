@@ -24,10 +24,12 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
       _   <- logLn(showContext(context))
       _   <- logLn(showInput(input))
       _   <- logLn(showInputBody(inputBody))
-      s <- dependencies.use { clock =>
+      result <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
-    } yield LambdaOutput.fromBodyAndEncoding(s, BodyEncoding.Base64).asJson.noSpaces
+      output = LambdaOutput.fromBodyAndEncoding(result, BodyEncoding.None).asJson.noSpaces
+      _ <- logLn(output)
+    } yield output
   }
 
   def dependencies: Resource[IO, Clock] =
