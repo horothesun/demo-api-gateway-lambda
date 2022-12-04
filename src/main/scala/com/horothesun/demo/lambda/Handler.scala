@@ -1,13 +1,13 @@
-package com.horothesun.demo
+package com.horothesun.demo.lambda
 
-import cats.effect.{IO, Resource}
 import cats.effect.unsafe.implicits.global
-import cats.implicits._
+import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
+import com.horothesun.demo.lambda.Input.getBodyOpt
+import com.horothesun.demo._
 import scala.jdk.CollectionConverters._
-import scala.util.Try
 
-class LambdaHandler extends RequestHandler[java.util.Map[String, Object], String] {
+class Handler extends RequestHandler[java.util.Map[String, Object], String] {
 
   override def handleRequest(input: java.util.Map[String, Object], context: Context): String =
     run(input.asScala.toMap, context).unsafeRunSync()
@@ -54,29 +54,6 @@ class LambdaHandler extends RequestHandler[java.util.Map[String, Object], String
       .mkString("[\n  ", "\n  ", "\n]")
 
   def getBody(in: Map[String, Object]): IO[String] =
-    IO.fromOption(
-      (
-        bodyFromInput(in),
-        isBase64EncodedFromInput(in)
-      ).flatMapN(decodedBody)
-    )(new Throwable("Couldn't decode input body!"))
-
-  def isBase64EncodedFromInput(in: Map[String, Object]): Option[Boolean] =
-    in.get("isBase64Encoded")
-      .collect {
-        case b: java.lang.Boolean => b
-        case s: String =>
-          s match {
-            case "true"  => true
-            case "false" => false
-          }
-      }
-
-  def bodyFromInput(in: Map[String, Object]): Option[String] =
-    in.get("body").collect { case s: String => s }
-
-  def decodedBody(body: String, isBase64Encoded: Boolean): Option[String] =
-    if (isBase64Encoded) Try(new String(java.util.Base64.getDecoder.decode(body))).toOption
-    else Some(body)
+    IO.fromOption(getBodyOpt(in))(new Throwable("Couldn't decode input body!"))
 
 }
