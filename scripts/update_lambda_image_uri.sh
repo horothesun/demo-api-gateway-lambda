@@ -11,6 +11,7 @@ IMAGE_SHA=$(
     jq --arg imageLatestTag "${IMAGE_LATEST_TAG}" \
       --raw-output '.imageIds | map(select(.imageTag == $imageLatestTag))[0].imageDigest'
 )
+[[ -z "${IMAGE_SHA}" ]] && echo "Error: couldn't retrieve latest image SHA!" && exit 123
 
 aws lambda update-function-code \
   --region "${LOGIN_AWS_REGION}" \
