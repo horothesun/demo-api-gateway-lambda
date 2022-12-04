@@ -4,6 +4,10 @@ import cats.implicits._
 import Models._
 import scala.util.Try
 
+/*
+  API Gateway integration - Payload format 2.0
+  https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
+*/
 object Input {
 
   def getBodyOpt(in: Map[String, Object]): Option[String] =
@@ -14,15 +18,8 @@ object Input {
 
   def bodyEncodingFromInput(in: Map[String, Object]): Option[BodyEncoding] =
     in.get("isBase64Encoded")
-      .collect {
-        case b: java.lang.Boolean =>
-          if (b) BodyEncoding.Base64 else BodyEncoding.None
-        case s: String =>
-          s match {
-            case "true"  => BodyEncoding.Base64
-            case "false" => BodyEncoding.None
-          }
-      }
+      .collect { case b: java.lang.Boolean => b }
+      .map(if (b) BodyEncoding.Base64 else BodyEncoding.None)
 
   def bodyFromInput(in: Map[String, Object]): Option[String] =
     in.get("body").collect { case s: String => s }
