@@ -9,3 +9,5 @@ aws lambda update-function-code \
   --region "${LOGIN_AWS_REGION}" \
   --function-name "${LAMBDA_NAME}" \
   --image-uri "${ECR_REGISTRY}/${ECR_REPO_NAME_AND_LATEST_TAG}"
+
+aws lambda wait function-updated-v2 --function-name "${LAMBDA_NAME}"
