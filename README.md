@@ -1,6 +1,7 @@
 # Demo API Gateway triggered lambda
 
 [![CI](https://github.com/horothesun/demo-api-gateway-lambda/workflows/CI/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
+[![API call](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/api_call.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/api_call.yml)
 
 ## CI
 
