@@ -13,8 +13,9 @@ permissions:
 
 env:
   LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
-  ECR_REPO_NAME_AND_LATEST_TAG: ${{ secrets.ECR_REPO_NAME }}:latest
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.LOGIN_AWS_REGION }}.amazonaws.com
+  ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
+  IMAGE_LATEST_TAG: "latest"
   LAMBDA_NAME: "demo-api-gateway-lambda"
 
 concurrency:
