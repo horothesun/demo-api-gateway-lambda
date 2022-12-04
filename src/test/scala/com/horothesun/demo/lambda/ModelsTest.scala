@@ -33,7 +33,7 @@ class ModelsTest extends FunSuite {
       LambdaOutput.fromBodyAndEncoding(body, BodyEncoding.None),
       LambdaOutput(
         isBase64Encoded = false,
-        StatusCode.OK,
+        StatusCode.BadRequest,
         body,
         headers = Map("Content-Type" -> "application/json"),
         cookies = List.empty
@@ -47,7 +47,7 @@ class ModelsTest extends FunSuite {
       LambdaOutput.fromBodyAndEncoding(body, BodyEncoding.Base64),
       LambdaOutput(
         isBase64Encoded = true,
-        StatusCode.OK,
+        StatusCode.BadRequest,
         body = "eyJoZWxsbyI6IndvcmxkIn0=",
         headers = Map("Content-Type" -> "application/json"),
         cookies = List.empty

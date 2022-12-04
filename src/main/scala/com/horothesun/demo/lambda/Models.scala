@@ -40,7 +40,7 @@ object Models {
     def fromBodyAndEncoding(body: String, bodyEncoding: BodyEncoding): LambdaOutput =
       LambdaOutput(
         isBase64Encoded = bodyEncoding == BodyEncoding.Base64,
-        StatusCode.OK,
+        StatusCode.BadRequest,
         body = bodyEncoding match {
           case BodyEncoding.Base64 => new String(java.util.Base64.getEncoder.encode(body.getBytes))
           case BodyEncoding.None   => body
