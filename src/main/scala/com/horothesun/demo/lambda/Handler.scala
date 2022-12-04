@@ -19,8 +19,8 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
       _    <- logLn(showEnvVars(env))
       _    <- logLn(showContext(context))
       _    <- logLn(showInput(input))
-      body <- getBody(input)
-      _    <- logLn(s"BODY: $body")
+      body <- Input.getBodyOpt(input)
+      _    <- logLn(showBody(body))
       s <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
@@ -53,7 +53,7 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
       .map { case (k, v) => s"$k -> ${v.toString}" }
       .mkString("[\n  ", "\n  ", "\n]")
 
-  def getBody(in: Map[String, Object]): IO[String] =
-    IO.fromOption(getBodyOpt(in))(new Throwable("Couldn't decode input body!"))
+  def showBody(body: Option[String]): String =
+    "BODY: " + b.fold("N.D.: Couldn't decode input body!")(identity)
 
 }
