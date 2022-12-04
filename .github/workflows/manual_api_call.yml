@@ -1,4 +1,4 @@
-name: API call
+name: Manual API call
 
 on:
   workflow_dispatch: # enable manual execution
@@ -8,8 +8,8 @@ env:
   PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
 
 jobs:
-  api-call:
-    name: API call
+  manual-api-call:
+    name: Manual API call
     runs-on: ubuntu-latest
     timeout-minutes: 1
     defaults:
