@@ -19,7 +19,10 @@ object Input {
   def bodyEncodingFromInput(in: Map[String, Object]): Option[BodyEncoding] =
     in.get("isBase64Encoded")
       .collect { case b: java.lang.Boolean => b }
-      .map(b => if (b) BodyEncoding.Base64 else BodyEncoding.None)
+      .map(b =>
+        if (b) BodyEncoding.Base64
+        else BodyEncoding.None
+      )
 
   def bodyFromInput(in: Map[String, Object]): Option[String] =
     in.get("body").collect { case s: String => s }
