@@ -27,7 +27,7 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
       result <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
-      output = s"{\"statusCode\":400,\"body\":\"$result\"}"
+      output = s"{\"statusCode\":400,\"body\":${result.asJson.noSpaces}}"
       // LambdaOutput.fromBodyAndEncoding(result, BodyEncoding.None).asJson.noSpaces
       _ <- logLn(output)
     } yield output
