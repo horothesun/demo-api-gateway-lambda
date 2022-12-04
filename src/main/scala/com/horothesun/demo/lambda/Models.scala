@@ -31,7 +31,8 @@ object Models {
       isBase64Encoded: Boolean,
       statusCode: StatusCode,
       body: String,
-      headers: Map[String, String]
+      headers: Map[String, String],
+      cookies: List[String]
   )
   object LambdaOutput {
     implicit val encoder: Encoder[LambdaOutput] = deriveEncoder
@@ -44,7 +45,8 @@ object Models {
           case BodyEncoding.Base64 => new String(java.util.Base64.getEncoder.encode(body.getBytes))
           case BodyEncoding.None   => body
         },
-        headers = Map("content-type" -> "application/json")
+        headers = Map("content-type" -> "application/json"),
+        cookies = List.empty
       )
   }
 
