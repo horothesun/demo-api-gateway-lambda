@@ -4,7 +4,6 @@ import cats.effect.unsafe.implicits.global
 import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
 import com.horothesun.demo._
-import Input.getBodyOpt
 import scala.jdk.CollectionConverters._
 
 class Handler extends RequestHandler[java.util.Map[String, Object], String] {
@@ -15,12 +14,12 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
   def run(input: Map[String, Object], context: Context): IO[String] = {
     def logLn(message: => String): IO[Unit] = IO(context.getLogger.log(s"$message\n"))
     for {
-      env  <- getEnvVars
-      _    <- logLn(showEnvVars(env))
-      _    <- logLn(showContext(context))
-      _    <- logLn(showInput(input))
-      body <- Input.getBodyOpt(input)
-      _    <- logLn(showBody(body))
+      env <- getEnvVars
+      _   <- logLn(showEnvVars(env))
+      _   <- logLn(showContext(context))
+      _   <- logLn(showInput(input))
+      body = Input.getBodyOpt(input)
+      _ <- logLn(showBody(body))
       s <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
@@ -54,6 +53,6 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
       .mkString("[\n  ", "\n  ", "\n]")
 
   def showBody(body: Option[String]): String =
-    "BODY: " + b.fold("N.D.: Couldn't decode input body!")(identity)
+    "BODY: " + body.fold("N.D.: Couldn't decode input body!")(identity)
 
 }
