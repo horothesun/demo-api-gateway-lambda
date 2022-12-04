@@ -5,18 +5,20 @@ import cats.effect.unsafe.implicits.global
 import com.amazonaws.services.lambda.runtime._
 import scala.jdk.CollectionConverters.MapHasAsScala
 
-class LambdaHandler extends RequestHandler[java.util.Map[String, String], String] {
+class LambdaHandler extends RequestHandler[java.util.Map[String, Object], String] {
 
-  override def handleRequest(input: java.util.Map[String, String], context: Context): String =
+  override def handleRequest(input: java.util.Map[String, Object], context: Context): String =
     run(input.asScala.toMap, context).unsafeRunSync()
 
-  def run(input: Map[String, String], context: Context): IO[String] = {
+  def run(input: Map[String, Object], context: Context): IO[String] = {
     def logLn(message: => String): IO[Unit] = IO(context.getLogger.log(s"$message\n"))
     for {
       env <- getEnvVars
       _   <- logLn(s"ENVIRONMENT VARIABLES: ${env.mkString("[\n  ", "\n  ", "\n]")}")
       _   <- logLn(s"CONTEXT: ${showContext(context)}")
-      _   <- logLn(s"INPUT: ${input.mkString("[\n  ", "\n  ", "\n]")}")
+      _ <- logLn(
+        s"INPUT: ${input.map { case (k, v) => s"$k -> ${v.toString}" }.mkString("[\n  ", "\n  ", "\n]")}"
+      )
       s <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
