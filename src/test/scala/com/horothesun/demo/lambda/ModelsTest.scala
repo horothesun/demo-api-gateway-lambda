@@ -9,17 +9,17 @@ class ModelsTest extends FunSuite {
   test("LambdaOutput encoding") {
     val obtainedEncoding = LambdaOutput(
       isBase64Encoded = false,
-      StatusCode.OK,
+      StatusCode.Ok,
       body = "{\"hello\":\"world\"}",
-      headers = Map("Content-Type" -> "application/json")
+      headers = Map("content-type" -> "application/json")
     ).asJson.noSpaces
     val expectedEncoding =
       """
         |{
         |  "isBase64Encoded": false,
-        |  "statusCode": "200",
+        |  "statusCode": 200,
         |  "body": "{\"hello\":\"world\"}",
-        |  "headers": { "Content-Type": "application/json" }
+        |  "headers": { "content-type": "application/json" }
         |}
         |""".stripMargin.replace("\n", "").replace(" ", "")
     assertEquals(obtainedEncoding, expectedEncoding)
@@ -31,9 +31,9 @@ class ModelsTest extends FunSuite {
       LambdaOutput.fromBodyAndEncoding(body, BodyEncoding.None),
       LambdaOutput(
         isBase64Encoded = false,
-        StatusCode.BadRequest,
+        StatusCode.Ok,
         body,
-        headers = Map("Content-Type" -> "application/json")
+        headers = Map("content-type" -> "application/json")
       )
     )
   }
@@ -44,9 +44,9 @@ class ModelsTest extends FunSuite {
       LambdaOutput.fromBodyAndEncoding(body, BodyEncoding.Base64),
       LambdaOutput(
         isBase64Encoded = true,
-        StatusCode.BadRequest,
+        StatusCode.Ok,
         body = "eyJoZWxsbyI6IndvcmxkIn0=",
-        headers = Map("Content-Type" -> "application/json")
+        headers = Map("content-type" -> "application/json")
       )
     )
   }

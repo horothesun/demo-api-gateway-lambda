@@ -13,13 +13,13 @@ object Models {
 
   sealed trait StatusCode
   object StatusCode {
-    case object OK         extends StatusCode
+    case object Ok         extends StatusCode
     case object BadRequest extends StatusCode
 
     implicit val encoder: Encoder[StatusCode] =
-      Encoder.encodeString.contramap {
-        case OK         => "200"
-        case BadRequest => "400"
+      Encoder.encodeInt.contramap {
+        case Ok         => 200
+        case BadRequest => 400
       }
   }
 
@@ -39,12 +39,12 @@ object Models {
     def fromBodyAndEncoding(body: String, bodyEncoding: BodyEncoding): LambdaOutput =
       LambdaOutput(
         isBase64Encoded = bodyEncoding == BodyEncoding.Base64,
-        StatusCode.BadRequest,
+        StatusCode.Ok,
         body = bodyEncoding match {
           case BodyEncoding.Base64 => new String(java.util.Base64.getEncoder.encode(body.getBytes))
           case BodyEncoding.None   => body
         },
-        headers = Map("Content-Type" -> "application/json")
+        headers = Map("content-type" -> "application/json")
       )
   }
 
