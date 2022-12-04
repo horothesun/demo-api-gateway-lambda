@@ -10,7 +10,7 @@ import scala.util.Try
  */
 object Input {
 
-  def getBodyOpt(in: Map[String, Object]): Option[String] =
+  def getBody(in: Map[String, Object]): Option[String] =
     (
       bodyFromInput(in),
       bodyEncodingFromInput(in)

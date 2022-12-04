@@ -4,6 +4,9 @@ import cats.effect.unsafe.implicits.global
 import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
 import com.horothesun.demo._
+import com.horothesun.demo.lambda.Models._
+import io.circe.syntax._
+
 import scala.jdk.CollectionConverters._
 
 class Handler extends RequestHandler[java.util.Map[String, Object], String] {
@@ -12,22 +15,26 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
     run(input.asScala.toMap, context).unsafeRunSync()
 
   def run(input: Map[String, Object], context: Context): IO[String] = {
-    def logLn(message: => String): IO[Unit] = IO(context.getLogger.log(s"$message\n"))
+    implicit val logger: LambdaLogger = context.getLogger
+
+    val inputBody = Input.getBody(input)
     for {
       env <- getEnvVars
       _   <- logLn(showEnvVars(env))
       _   <- logLn(showContext(context))
       _   <- logLn(showInput(input))
-      body = Input.getBodyOpt(input)
-      _ <- logLn(showBody(body))
+      _   <- logLn(showInputBody(inputBody))
       s <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
-    } yield s
+    } yield LambdaOutput.fromBodyAndEncoding(s, BodyEncoding.Base64).asJson.noSpaces
   }
 
   def dependencies: Resource[IO, Clock] =
     Resource.pure[IO, Clock](Clock.create)
+
+  def logLn(message: => String)(implicit logger: LambdaLogger): IO[Unit] =
+    IO(logger.log(s"$message\n"))
 
   def getEnvVars: IO[Map[String, String]] =
     IO(System.getenv.asScala.toMap)
@@ -52,7 +59,7 @@ class Handler extends RequestHandler[java.util.Map[String, Object], String] {
       .map { case (k, v) => s"$k -> ${v.toString}" }
       .mkString("[\n  ", "\n  ", "\n]")
 
-  def showBody(body: Option[String]): String =
-    "BODY: " + body.fold("N.D.: Couldn't decode input body!")(identity)
+  def showInputBody(body: Option[String]): String =
+    body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: $b")
 
 }
