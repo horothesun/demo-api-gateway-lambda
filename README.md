@@ -35,6 +35,6 @@ and test it with
 ```bash
 curl --silent \
   --request "POST" "http://localhost:9000/2015-03-31/functions/function/invocations" \
-  --data '{"payload":"hello world!"}' | \
+  --data '{"body":"hello world!","isBase64Encoded":false}' | \
   jq --raw-output '.' | jq '.'
 ```
