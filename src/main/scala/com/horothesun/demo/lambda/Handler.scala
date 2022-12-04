@@ -3,8 +3,8 @@ package com.horothesun.demo.lambda
 import cats.effect.unsafe.implicits.global
 import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
-import com.horothesun.demo.lambda.Input.getBodyOpt
 import com.horothesun.demo._
+import Input.getBodyOpt
 import scala.jdk.CollectionConverters._
 
 class Handler extends RequestHandler[java.util.Map[String, Object], String] {

@@ -1,7 +1,7 @@
 package com.horothesun.demo.lambda
 
 import cats.implicits._
-import com.horothesun.demo.lambda.Models._
+import Models._
 import scala.util.Try
 
 object Input {
