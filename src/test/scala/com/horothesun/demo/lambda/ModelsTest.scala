@@ -11,17 +11,15 @@ class ModelsTest extends FunSuite {
       isBase64Encoded = false,
       StatusCode.OK,
       body = "{\"hello\":\"world\"}",
-      headers = Map("Content-Type" -> "application/json"),
-      cookies = List.empty
+      headers = Map("Content-Type" -> "application/json")
     ).asJson.noSpaces
     val expectedEncoding =
       """
         |{
         |  "isBase64Encoded": false,
-        |  "statusCode": 200,
+        |  "statusCode": "200",
         |  "body": "{\"hello\":\"world\"}",
-        |  "headers": { "Content-Type": "application/json" },
-        |  "cookies": []
+        |  "headers": { "Content-Type": "application/json" }
         |}
         |""".stripMargin.replace("\n", "").replace(" ", "")
     assertEquals(obtainedEncoding, expectedEncoding)
@@ -35,8 +33,7 @@ class ModelsTest extends FunSuite {
         isBase64Encoded = false,
         StatusCode.BadRequest,
         body,
-        headers = Map("Content-Type" -> "application/json"),
-        cookies = List.empty
+        headers = Map("Content-Type" -> "application/json")
       )
     )
   }
@@ -49,8 +46,7 @@ class ModelsTest extends FunSuite {
         isBase64Encoded = true,
         StatusCode.BadRequest,
         body = "eyJoZWxsbyI6IndvcmxkIn0=",
-        headers = Map("Content-Type" -> "application/json"),
-        cookies = List.empty
+        headers = Map("Content-Type" -> "application/json")
       )
     )
   }
