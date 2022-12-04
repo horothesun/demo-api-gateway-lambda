@@ -1,0 +1,21 @@
+name: API call
+
+on:
+  workflow_dispatch: # enable manual execution
+
+env:
+  DEFAULT_SHELL: "bash"
+  PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+
+jobs:
+  api-call:
+    name:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    defaults:
+      run:
+        shell: ${{ env.DEFAULT_SHELL }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: API call
+      run: curl --silent --request "GET" "${PROD_BASE_URL}/time"

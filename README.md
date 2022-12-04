@@ -8,8 +8,15 @@ Secrets
 
 - `AWS_ACCOUNT_ID`
 - `ECR_REPO_NAME`
+- `LAMBDA_NAME`
 - `LOGIN_AWS_REGION`
 - `PROD_CI_ROLE_ARN`
+
+## API call
+
+Secrets
+
+- `PROD_BASE_URL`
 
 ## Docker
 
