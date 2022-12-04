@@ -45,7 +45,7 @@ object Models {
           case BodyEncoding.Base64 => new String(java.util.Base64.getEncoder.encode(body.getBytes))
           case BodyEncoding.None   => body
         },
-        headers = Map("content-type" -> "application/json"),
+        headers = Map("Content-Type" -> "application/json"),
         cookies = List.empty
       )
   }
