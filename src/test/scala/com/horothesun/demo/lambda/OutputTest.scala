@@ -16,7 +16,7 @@ class OutputTest extends FunSuite {
   }
 
   test("createResponse with base64 encoded body") {
-    val r = createResponse(StatusCode.Ok, "{\"hello\":\"world\"}", Base64Encoding)
+    val r = createResponse(StatusCode.Ok, "{\"hello\":\"world\"}", Base64)
     assertEquals(r.getStatusCode, 200)
     assertEquals(r.getBody, "eyJoZWxsbyI6IndvcmxkIn0=")
     assertEquals(r.getIsBase64Encoded, true)

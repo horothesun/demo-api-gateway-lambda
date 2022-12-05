@@ -13,22 +13,22 @@ class ModelsTest extends ScalaCheckSuite {
     }
   }
 
-  property("Base64Encoding.encode and-then decode == NoEncoding.decode") {
+  property("Base64.encode and-then decode == NoEncoding.decode") {
     forAll(Gen.asciiPrintableStr) { s =>
-      assertEquals(Base64Encoding.decode(Base64Encoding.encode(s)), NoEncoding.decode(s))
+      assertEquals(Base64.decode(Base64.encode(s)), NoEncoding.decode(s))
     }
   }
 
-  test("Base64Encoding.decode with base64 text") {
-    assertEquals(Base64Encoding.decode("YWJj"), Some("abc"))
+  test("Base64.decode with base64 text") {
+    assertEquals(Base64.decode("YWJj"), Some("abc"))
   }
 
-  test("Base64Encoding.decode with non-base64 text") {
-    assertEquals(Base64Encoding.decode("!@£$%^&*"), None)
+  test("Base64.decode with non-base64 text") {
+    assertEquals(Base64.decode("!@£$%^&*"), None)
   }
 
-  test("Base64Encoding.encode") {
-    assertEquals(Base64Encoding.encode("abc"), "YWJj")
+  test("Base64.encode") {
+    assertEquals(Base64.encode("abc"), "YWJj")
   }
 
 }

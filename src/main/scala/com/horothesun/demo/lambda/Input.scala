@@ -14,7 +14,7 @@ object Input {
     Option(event.getBody)
 
   def getBodyEncoding(event: APIGatewayV2HTTPEvent): BodyEncoding =
-    if (event.getIsBase64Encoded) Base64Encoding
+    if (event.getIsBase64Encoded) Base64
     else NoEncoding
 
 }

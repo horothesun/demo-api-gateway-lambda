@@ -33,7 +33,7 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
       result <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
-      response = createResponse(StatusCode.Ok, result, Base64Encoding)
+      response = createResponse(StatusCode.Ok, result, Base64)
       _ <- logLn(showResponse(response))
     } yield response
   }

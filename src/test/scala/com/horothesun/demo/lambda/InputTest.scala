@@ -28,7 +28,7 @@ class InputTest extends FunSuite {
 
   test("getBodyEncoding with true isBase64Encoded value returns Base64Encoding") {
     val e = APIGatewayV2HTTPEvent.builder().withIsBase64Encoded(true).build()
-    assertEquals(getBodyEncoding(e), Base64Encoding)
+    assertEquals(getBodyEncoding(e), Base64)
   }
 
   test("getBodyEncoding with false isBase64Encoded value returns NoEncoding") {

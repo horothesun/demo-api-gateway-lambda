@@ -2,6 +2,7 @@ package com.horothesun.demo.lambda
 
 import com.amazonaws.services.lambda.runtime.events._
 import Models._
+import Models.BodyEncoding._
 
 object Output {
 
@@ -13,7 +14,7 @@ object Output {
     APIGatewayV2HTTPResponse
       .builder()
       .withBody(bodyEncoding.encode(body))
-      .withIsBase64Encoded(bodyEncoding.isBase64Encoded)
+      .withIsBase64Encoded(bodyEncoding == Base64)
       .withStatusCode(statusCode.toInt)
       .build()
 
