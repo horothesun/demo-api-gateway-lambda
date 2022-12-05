@@ -1,5 +1,6 @@
 package com.horothesun.demo.lambda
 
+import java.util.Base64
 import scala.util.Try
 
 object Models {
@@ -7,26 +8,20 @@ object Models {
   sealed trait BodyEncoding {
     import BodyEncoding._
 
-    def isBase64Encoded: Boolean = this match {
-      case Base64Encoding => true
-      case NoEncoding     => false
-    }
-
     def encode: String => String = this match {
-      case Base64Encoding => base64Encode
+      case Base64Encoding => s => new String(Base64.getEncoder.encode(s.getBytes))
       case NoEncoding     => identity[String]
     }
 
     def decode: String => Option[String] = this match {
-      case Base64Encoding => base64Decode
+      case Base64Encoding => s => Try(new String(Base64.getDecoder.decode(s))).toOption
       case NoEncoding     => Some[String]
     }
 
-    def base64Encode(s: String): String =
-      new String(java.util.Base64.getEncoder.encode(s.getBytes))
-
-    def base64Decode(s: String): Option[String] =
-      Try(new String(java.util.Base64.getDecoder.decode(s))).toOption
+    def isBase64Encoded: Boolean = this match {
+      case Base64Encoding => true
+      case NoEncoding     => false
+    }
   }
   object BodyEncoding {
     case object Base64Encoding extends BodyEncoding

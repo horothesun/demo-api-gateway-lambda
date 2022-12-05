@@ -34,7 +34,7 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
         Logic(clock).appLogic
       }
       response = createResponse(StatusCode.Ok, result, Base64Encoding)
-      _ <- logLn(s"RESPONSE: $response")
+      _ <- logLn(showResponse(response))
     } yield response
   }
 
@@ -48,8 +48,8 @@ object Handler {
   def getEnvVars: IO[Map[String, String]] =
     IO(System.getenv.asScala.toMap)
 
-  def logLn(message: => String)(implicit logger: LambdaLogger): IO[Unit] =
-    IO(logger.log(s"$message\n"))
+  def logLn(s: => String)(implicit logger: LambdaLogger): IO[Unit] =
+    IO(logger.log(s"$s\n"))
 
   def showEnvVars(env: Map[String, String]): String =
     "ENVIRONMENT VARIABLES: " + env.mkString("[\n  ", "\n  ", "\n]")
@@ -67,9 +67,12 @@ object Handler {
       "]"
 
   def showEvent(event: APIGatewayV2HTTPEvent): String =
-    "EVENT: " + event.toString
+    s"EVENT: ${event.toString}"
 
   def showDecodedBody(body: Option[String]): String =
     body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: $b")
+
+  def showResponse(response: APIGatewayV2HTTPResponse): String =
+    s"RESPONSE: $response"
 
 }

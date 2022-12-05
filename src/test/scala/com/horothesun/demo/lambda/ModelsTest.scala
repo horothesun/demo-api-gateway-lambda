@@ -7,26 +7,28 @@ import Models.BodyEncoding._
 
 class ModelsTest extends ScalaCheckSuite {
 
-  property("BodyEncoding.NoEncoding.decode == Some[String]") {
-    forAll(Gen.alphaNumStr) { s =>
+  property("NoEncoding.decode == Some[String]") {
+    forAll(Gen.asciiPrintableStr) { s =>
       assertEquals(NoEncoding.decode(s), Some(s))
     }
   }
 
-  test("BodyEncoding.Base64Encoding decode") {
+  property("Base64Encoding.encode and-then decode == NoEncoding.decode") {
+    forAll(Gen.asciiPrintableStr) { s =>
+      assertEquals(Base64Encoding.decode(Base64Encoding.encode(s)), NoEncoding.decode(s))
+    }
+  }
+
+  test("Base64Encoding.decode with base64 text") {
     assertEquals(Base64Encoding.decode("YWJj"), Some("abc"))
   }
 
-  test("BodyEncoding.base64Decode with base64 text") {
-    assertEquals(Base64Encoding.base64Decode("YWJj"), Some("abc"))
+  test("Base64Encoding.decode with non-base64 text") {
+    assertEquals(Base64Encoding.decode("!@£$%^&*"), None)
   }
 
-  test("BodyEncoding.base64Decode with non-base64 text") {
-    assertEquals(Base64Encoding.base64Decode("!@£$%^&*"), None)
-  }
-
-  test("BodyEncoding.base64Encode") {
-    assertEquals(Base64Encoding.base64Encode("abc"), "YWJj")
+  test("Base64Encoding.encode") {
+    assertEquals(Base64Encoding.encode("abc"), "YWJj")
   }
 
 }
