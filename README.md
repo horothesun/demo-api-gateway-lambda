@@ -1,7 +1,16 @@
-# Demo API Gateway triggered lambda
+# Demo API Gateway triggered Lambda
 
 [![CI](https://github.com/horothesun/demo-api-gateway-lambda/workflows/CI/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
 [![Manual API call](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml)
+
+Based on API Gateway's
+
+- HTTP API (not REST API) and
+- payload format version `2.0`.
+
+The Lambda function has _**less than 30 seconds to complete**_
+because of the HTTP API's [maximum integration timeout](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#http-api-quotas)
+on synchronous requests.
 
 ## CI
 
