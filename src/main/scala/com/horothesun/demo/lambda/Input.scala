@@ -1,33 +1,19 @@
 package com.horothesun.demo.lambda
 
-import cats.implicits._
+import com.amazonaws.services.lambda.runtime.events._
 import Models._
-import scala.util.Try
+import Models.BodyEncoding._
 
-/*
-  API Gateway integration - Payload format 2.0
-  https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
- */
 object Input {
 
-  def getBody(in: Map[String, Object]): Option[String] =
-    (
-      bodyFromInput(in),
-      bodyEncodingFromInput(in)
-    ).flatMapN(decodedBody)
+  def getBody(event: APIGatewayV2HTTPEvent): Option[String] =
+    bodyFromEvent(event)
+      .flatMap(body => bodyEncodingFromEvent(event).decode(body))
 
-  def bodyEncodingFromInput(in: Map[String, Object]): Option[BodyEncoding] =
-    in.get("isBase64Encoded")
-      .collect { case b: java.lang.Boolean => b }
-      .map(b => if (b) BodyEncoding.Base64 else BodyEncoding.None)
+  def bodyFromEvent(event: APIGatewayV2HTTPEvent): Option[String] =
+    Option(event.getBody)
 
-  def bodyFromInput(in: Map[String, Object]): Option[String] =
-    in.get("body").collect { case s: String => s }
-
-  def decodedBody(body: String, bodyEncoding: BodyEncoding): Option[String] =
-    bodyEncoding match {
-      case BodyEncoding.Base64 => Try(new String(java.util.Base64.getDecoder.decode(body))).toOption
-      case BodyEncoding.None   => Some(body)
-    }
+  def bodyEncodingFromEvent(event: APIGatewayV2HTTPEvent): BodyEncoding =
+    if (event.getIsBase64Encoded) Base64Encoding else NoEncoding
 
 }

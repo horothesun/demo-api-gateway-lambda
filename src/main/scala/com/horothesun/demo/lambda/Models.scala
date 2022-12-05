@@ -1,51 +1,48 @@
 package com.horothesun.demo.lambda
 
-import io.circe._
-import io.circe.generic.semiauto._
+import scala.util.Try
 
 object Models {
 
-  sealed trait BodyEncoding
+  sealed trait BodyEncoding {
+    import BodyEncoding._
+
+    def isBase64Encoded: Boolean = this match {
+      case Base64Encoding => true
+      case NoEncoding     => false
+    }
+
+    def encode: String => String = this match {
+      case Base64Encoding => base64Encode
+      case NoEncoding     => identity[String]
+    }
+
+    def decode: String => Option[String] = this match {
+      case Base64Encoding => base64Decode
+      case NoEncoding     => Some[String]
+    }
+
+    def base64Encode(s: String): String =
+      new String(java.util.Base64.getEncoder.encode(s.getBytes))
+
+    def base64Decode(s: String): Option[String] =
+      Try(new String(java.util.Base64.getDecoder.decode(s))).toOption
+  }
   object BodyEncoding {
-    case object Base64 extends BodyEncoding
-    case object None   extends BodyEncoding
+    case object Base64Encoding extends BodyEncoding
+    case object NoEncoding     extends BodyEncoding
   }
 
-  sealed trait StatusCode
+  sealed trait StatusCode {
+    import StatusCode._
+    def toInt: Int = this match {
+      case Ok         => 200
+      case BadRequest => 400
+    }
+  }
   object StatusCode {
     case object Ok         extends StatusCode
     case object BadRequest extends StatusCode
-
-    implicit val encoder: Encoder[StatusCode] =
-      Encoder.encodeInt.contramap {
-        case Ok         => 200
-        case BadRequest => 400
-      }
-  }
-
-  /*
-    API Gateway integration - Payload format 2.0
-    https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
-   */
-  case class LambdaOutput(
-      isBase64Encoded: Boolean,
-      statusCode: StatusCode,
-      body: String,
-      headers: Map[String, String]
-  )
-  object LambdaOutput {
-    implicit val encoder: Encoder[LambdaOutput] = deriveEncoder
-
-    def fromBodyAndEncoding(body: String, bodyEncoding: BodyEncoding): LambdaOutput =
-      LambdaOutput(
-        isBase64Encoded = bodyEncoding == BodyEncoding.Base64,
-        StatusCode.Ok,
-        body = bodyEncoding match {
-          case BodyEncoding.Base64 => new String(java.util.Base64.getEncoder.encode(body.getBytes))
-          case BodyEncoding.None   => body
-        },
-        headers = Map("content-type" -> "application/json")
-      )
   }
 
 }

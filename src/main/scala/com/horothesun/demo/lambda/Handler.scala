@@ -5,9 +5,8 @@ import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo._
-import com.horothesun.demo.lambda.Models._
-//import io.circe.syntax._
-
+import com.horothesun.demo.lambda.Models.BodyEncoding._
+import com.horothesun.demo.lambda.Models.StatusCode
 import scala.jdk.CollectionConverters._
 
 class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse] {
@@ -21,12 +20,7 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
   def run(event: APIGatewayV2HTTPEvent, context: Context): IO[APIGatewayV2HTTPResponse] = {
     implicit val logger: LambdaLogger = context.getLogger
 
-//    val inputBody = Input.getBody(event)
-    val inputBody = Input.decodedBody(
-      event.getBody,
-      if (event.getIsBase64Encoded) BodyEncoding.Base64
-      else BodyEncoding.None
-    )
+    val inputBody = Input.getBody(event)
     for {
       env <- getEnvVars
       _   <- logLn(showEnvVars(env))
@@ -36,9 +30,7 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
       result <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
-      //      output = s"{\"statusCode\":400,\"body\":${result.asJson.noSpaces}}"
-      // LambdaOutput.fromBodyAndEncoding(result, BodyEncoding.None).asJson.noSpaces
-      response = getResponse(statusCode = 400, result, isBase64Encoded = false)
+      response = Output.getResponse(StatusCode.Ok, result, NoEncoding)
       _ <- logLn(s"RESPONSE: $response")
     } yield response
   }
@@ -67,24 +59,7 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
       s"  memory_limit_in_mb -> ${c.getMemoryLimitInMB}\n" +
       "]"
 
-//  def showInput(in: Map[String, Object]): String =
-//    "INPUT: " + in
-//      .map { case (k, v) => s"$k -> ${v.toString}" }
-//      .mkString("[\n  ", "\n  ", "\n]")
-
   def showInputBody(body: Option[String]): String =
     body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: $b")
-
-  def getResponse(
-      statusCode: Int,
-      result: String,
-      isBase64Encoded: Boolean
-  ): APIGatewayV2HTTPResponse =
-    APIGatewayV2HTTPResponse
-      .builder()
-      .withStatusCode(statusCode)
-      .withBody(result)
-      .withIsBase64Encoded(isBase64Encoded)
-      .build()
 
 }

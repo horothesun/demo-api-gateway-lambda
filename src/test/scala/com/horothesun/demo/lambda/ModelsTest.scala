@@ -1,54 +1,33 @@
 package com.horothesun.demo.lambda
 
-import com.horothesun.demo.lambda.Models._
-import io.circe.syntax._
-import munit.FunSuite
+import Models._
+import Models.BodyEncoding._
+import munit.ScalaCheckSuite
+import org.scalacheck.Gen
+import org.scalacheck.Prop._
 
-class ModelsTest extends FunSuite {
+class ModelsTest extends ScalaCheckSuite {
 
-  test("LambdaOutput encoding") {
-    val obtainedEncoding = LambdaOutput(
-      isBase64Encoded = false,
-      StatusCode.Ok,
-      body = "{\"hello\":\"world\"}",
-      headers = Map("content-type" -> "application/json")
-    ).asJson.noSpaces
-    val expectedEncoding =
-      """
-        |{
-        |  "isBase64Encoded": false,
-        |  "statusCode": 200,
-        |  "body": "{\"hello\":\"world\"}",
-        |  "headers": { "content-type": "application/json" }
-        |}
-        |""".stripMargin.replace("\n", "").replace(" ", "")
-    assertEquals(obtainedEncoding, expectedEncoding)
+  property("BodyEncoding.NoEncoding.decode == Some[String]") {
+    forAll(Gen.alphaNumStr) { s =>
+      assertEquals(NoEncoding.decode(s), Some(s))
+    }
   }
 
-  test("LambdaOutput fromBodyAndEncoding with plain-text body") {
-    val body = "{\"hello\":\"world\"}"
-    assertEquals(
-      LambdaOutput.fromBodyAndEncoding(body, BodyEncoding.None),
-      LambdaOutput(
-        isBase64Encoded = false,
-        StatusCode.Ok,
-        body,
-        headers = Map("content-type" -> "application/json")
-      )
-    )
+  test("BodyEncoding.Base64Encoding decode") {
+    assertEquals(Base64Encoding.decode("YWJj"), Some("abc"))
   }
 
-  test("LambdaOutput fromBodyAndEncoding with base64 encoded body") {
-    val body = "{\"hello\":\"world\"}"
-    assertEquals(
-      LambdaOutput.fromBodyAndEncoding(body, BodyEncoding.Base64),
-      LambdaOutput(
-        isBase64Encoded = true,
-        StatusCode.Ok,
-        body = "eyJoZWxsbyI6IndvcmxkIn0=",
-        headers = Map("content-type" -> "application/json")
-      )
-    )
+  test("BodyEncoding.base64Decode base64 text") {
+    assertEquals(Base64Encoding.base64Decode("YWJj"), Some("abc"))
+  }
+
+  test("BodyEncoding.base64Decode non-base64 text") {
+    assertEquals(Base64Encoding.base64Decode("!@£$%^&*"), None)
+  }
+
+  test("BodyEncoding.base64Encode") {
+    assertEquals(Base64Encoding.base64Encode("abc"), "YWJj")
   }
 
 }

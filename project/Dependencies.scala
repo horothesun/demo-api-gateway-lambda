@@ -10,6 +10,7 @@ object Dependencies {
     val awsLambdaCore    = "1.2.2"
     val awsLambdaEvents  = "3.11.0"
     val logbackClassic   = "1.4.5"
+    val munitScalaCheck  = "0.7.29"
     val munitCatsEffect  = "1.0.7"
   }
 
@@ -29,6 +30,7 @@ object Dependencies {
   )
 
   lazy val test: Seq[ModuleID] = Seq(
+    "org.scalameta" %% "munit-scalacheck"    % Version.munitScalaCheck % Test,
     "org.typelevel" %% "munit-cats-effect-3" % Version.munitCatsEffect % Test
   )
 
