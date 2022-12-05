@@ -4,11 +4,11 @@ ThisBuild / organization     := "com.horothesun"
 ThisBuild / organizationName := "horothesun"
 ThisBuild / scalaVersion     := "2.13.10"
 
-val demoApiGatewayLambdaName = "demo-api-gateway-lambda"
+val projectName = "demo-api-gateway-lambda"
 
 lazy val root = project
   .in(file("."))
-  .settings(name := demoApiGatewayLambdaName)
+  .settings(name := projectName)
   .configs(IntegrationTest)
   .settings(Defaults.itSettings)
   .settings(Dependencies.core)
@@ -17,7 +17,7 @@ lazy val root = project
       .sequential(Test / test, IntegrationTest / test)
       .value,
     assembly / assemblyMergeStrategy := customMergeStrategy,
-    assembly / assemblyJarName       := s"$demoApiGatewayLambdaName.jar"
+    assembly / assemblyJarName       := s"$projectName.jar"
   )
 
 val customMergeStrategy: String => MergeStrategy = {

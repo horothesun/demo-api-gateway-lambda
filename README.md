@@ -8,8 +8,8 @@ Based on API Gateway's
 - HTTP API (not REST API) and
 - payload format version `2.0`.
 
-The Lambda function has _**less than 30 seconds to complete**_
-because of the HTTP API's [maximum integration timeout](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#http-api-quotas)
+The Lambda function has _**less than 30 seconds to complete**_ because of the
+HTTP API's [maximum integration timeout](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#http-api-quotas)
 on synchronous requests.
 
 ## CI
@@ -17,9 +17,9 @@ on synchronous requests.
 Secrets
 
 - `AWS_ACCOUNT_ID`
+- `AWS_REGION`
 - `ECR_REPO_NAME`
 - `LAMBDA_NAME`
-- `LOGIN_AWS_REGION`
 - `PROD_CI_ROLE_ARN`
 
 ## API call

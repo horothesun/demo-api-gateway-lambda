@@ -6,14 +6,13 @@ on:
   pull_request:
     branches: [ "master" ]
 
-
 permissions:
   id-token: write
   contents: read
 
 env:
-  LOGIN_AWS_REGION: ${{ secrets.LOGIN_AWS_REGION }}
-  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.LOGIN_AWS_REGION }}.amazonaws.com
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
   ECR_REPO_NAME: ${{ secrets.ECR_REPO_NAME }}
   IMAGE_LATEST_TAG: "latest"
   LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
@@ -72,7 +71,7 @@ jobs:
         if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
         with:
           role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
-          aws-region: ${{ env.LOGIN_AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Push image
         if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
