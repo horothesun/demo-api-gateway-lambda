@@ -33,10 +33,10 @@ Secrets
 Build an image with
 
 ```bash
-docker build --tag <REPOSITORY:TAG> \
-  --build-arg JAVA_VERSION=11 \
-  --build-arg SBT_VERSION=1.8.0 \
-  --file ./Dockerfile .
+docker build --tag "<REPOSITORY:TAG>" \
+  --build-arg "JAVA_VERSION=11" \
+  --build-arg "SBT_VERSION=1.8.0" \
+  --file "./Dockerfile" "."
 ```
 
 (default `JAVA_VERSION` and `SBT_VERSION` values in `Dockerfile`).
@@ -44,7 +44,7 @@ docker build --tag <REPOSITORY:TAG> \
 Run the image with
 
 ```bash
-docker run --rm --publish 9000:8080 <REPOSITORY:TAG>
+docker run --rm --publish "9000:8080" "<REPOSITORY:TAG>"
 ```
 
 and test it with
