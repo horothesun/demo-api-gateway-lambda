@@ -29,7 +29,7 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
       _   <- logLn(showEnvVars(env))
       _   <- logLn(showContext(context))
       _   <- logLn(showEvent(event))
-      _   <- logLn(showInputBody(decodedBody))
+      _   <- logLn(showDecodedBody(decodedBody))
       result <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
@@ -69,7 +69,7 @@ object Handler {
   def showEvent(event: APIGatewayV2HTTPEvent): String =
     "EVENT: " + event.toString
 
-  def showInputBody(body: Option[String]): String =
+  def showDecodedBody(body: Option[String]): String =
     body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: $b")
 
 }
