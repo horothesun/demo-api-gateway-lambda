@@ -5,9 +5,12 @@ import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo._
-import com.horothesun.demo.lambda.Models.BodyEncoding._
-import com.horothesun.demo.lambda.Models.StatusCode
+import lambda.Models.BodyEncoding._
+import lambda.Models.StatusCode
+import lambda.Output._
 import scala.jdk.CollectionConverters._
+import Handler._
+import Input._
 
 class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse] {
 
@@ -20,17 +23,17 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
   def run(event: APIGatewayV2HTTPEvent, context: Context): IO[APIGatewayV2HTTPResponse] = {
     implicit val logger: LambdaLogger = context.getLogger
 
-    val inputBody = Input.getBody(event)
+    val decodedBody = getDecodedBody(event)
     for {
       env <- getEnvVars
       _   <- logLn(showEnvVars(env))
       _   <- logLn(showContext(context))
-      _   <- logLn(s"EVENT: ${event.toString}")
-      _   <- logLn(showInputBody(inputBody))
+      _   <- logLn(showEvent(event))
+      _   <- logLn(showInputBody(decodedBody))
       result <- dependencies.use { clock =>
         Logic(clock).appLogic
       }
-      response = Output.getResponse(StatusCode.BadRequest, result, Base64Encoding)
+      response = createResponse(StatusCode.Ok, result, Base64Encoding)
       _ <- logLn(s"RESPONSE: $response")
     } yield response
   }
@@ -38,26 +41,33 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
   def dependencies: Resource[IO, Clock] =
     Resource.pure[IO, Clock](Clock.create)
 
-  def logLn(message: => String)(implicit logger: LambdaLogger): IO[Unit] =
-    IO(logger.log(s"$message\n"))
+}
+
+object Handler {
 
   def getEnvVars: IO[Map[String, String]] =
     IO(System.getenv.asScala.toMap)
 
+  def logLn(message: => String)(implicit logger: LambdaLogger): IO[Unit] =
+    IO(logger.log(s"$message\n"))
+
   def showEnvVars(env: Map[String, String]): String =
     "ENVIRONMENT VARIABLES: " + env.mkString("[\n  ", "\n  ", "\n]")
 
-  def showContext(c: Context): String =
+  def showContext(ctx: Context): String =
     "CONTEXT: [\n" +
-      s"  request_id -> ${c.getAwsRequestId}\n" +
-      s"  log_group_name -> ${c.getLogGroupName}\n" +
-      s"  log_stream_name -> ${c.getLogStreamName}\n" +
-      s"  function_name -> ${c.getFunctionName}\n" +
-      s"  function_version -> ${c.getFunctionVersion}\n" +
-      s"  invoked_function_arn -> ${c.getInvokedFunctionArn}\n" +
-      s"  remaining_time_in_millis -> ${c.getRemainingTimeInMillis}\n" +
-      s"  memory_limit_in_mb -> ${c.getMemoryLimitInMB}\n" +
+      s"  request_id -> ${ctx.getAwsRequestId}\n" +
+      s"  log_group_name -> ${ctx.getLogGroupName}\n" +
+      s"  log_stream_name -> ${ctx.getLogStreamName}\n" +
+      s"  function_name -> ${ctx.getFunctionName}\n" +
+      s"  function_version -> ${ctx.getFunctionVersion}\n" +
+      s"  invoked_function_arn -> ${ctx.getInvokedFunctionArn}\n" +
+      s"  remaining_time_in_millis -> ${ctx.getRemainingTimeInMillis}\n" +
+      s"  memory_limit_in_mb -> ${ctx.getMemoryLimitInMB}\n" +
       "]"
+
+  def showEvent(event: APIGatewayV2HTTPEvent): String =
+    "EVENT: " + event.toString
 
   def showInputBody(body: Option[String]): String =
     body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: $b")

@@ -1,10 +1,9 @@
 package com.horothesun.demo.lambda
 
-import Models._
-import Models.BodyEncoding._
 import munit.ScalaCheckSuite
 import org.scalacheck.Gen
 import org.scalacheck.Prop._
+import Models.BodyEncoding._
 
 class ModelsTest extends ScalaCheckSuite {
 
@@ -18,11 +17,11 @@ class ModelsTest extends ScalaCheckSuite {
     assertEquals(Base64Encoding.decode("YWJj"), Some("abc"))
   }
 
-  test("BodyEncoding.base64Decode base64 text") {
+  test("BodyEncoding.base64Decode with base64 text") {
     assertEquals(Base64Encoding.base64Decode("YWJj"), Some("abc"))
   }
 
-  test("BodyEncoding.base64Decode non-base64 text") {
+  test("BodyEncoding.base64Decode with non-base64 text") {
     assertEquals(Base64Encoding.base64Decode("!@£$%^&*"), None)
   }
 

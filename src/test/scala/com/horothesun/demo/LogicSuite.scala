@@ -1,9 +1,9 @@
 package com.horothesun.demo
 
 import cats.effect.IO
-import LogicSuite.clockStub
 import munit.CatsEffectSuite
 import java.time.{LocalDateTime, Month}
+import LogicSuite.clockStub
 
 class LogicSuite extends CatsEffectSuite {
 

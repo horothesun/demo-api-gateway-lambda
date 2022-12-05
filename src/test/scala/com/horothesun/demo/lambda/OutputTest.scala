@@ -1,25 +1,25 @@
 package com.horothesun.demo.lambda
 
+import munit.FunSuite
 import Models.StatusCode
 import Models.BodyEncoding._
-import munit.FunSuite
+import Output._
 
 class OutputTest extends FunSuite {
 
-  test("getResponse with plain-text body") {
-    val body     = "{\"hello\":\"world\"}"
-    val response = Output.getResponse(StatusCode.Ok, body, NoEncoding)
-    assertEquals(response.getStatusCode, 200)
-    assertEquals(response.getBody, body)
-    assertEquals(response.getIsBase64Encoded, false)
+  test("createResponse with plain-text body") {
+    val body = "{\"hello\":\"world\"}"
+    val r    = createResponse(StatusCode.Ok, body, NoEncoding)
+    assertEquals(r.getStatusCode, 200)
+    assertEquals(r.getBody, body)
+    assertEquals(r.getIsBase64Encoded, false)
   }
 
-  test("getResponse with base64 encoded body") {
-    val body     = "{\"hello\":\"world\"}"
-    val response = Output.getResponse(StatusCode.Ok, body, Base64Encoding)
-    assertEquals(response.getStatusCode, 200)
-    assertEquals(response.getBody, "eyJoZWxsbyI6IndvcmxkIn0=")
-    assertEquals(response.getIsBase64Encoded, true)
+  test("createResponse with base64 encoded body") {
+    val r = createResponse(StatusCode.Ok, "{\"hello\":\"world\"}", Base64Encoding)
+    assertEquals(r.getStatusCode, 200)
+    assertEquals(r.getBody, "eyJoZWxsbyI6IndvcmxkIn0=")
+    assertEquals(r.getIsBase64Encoded, true)
   }
 
 }

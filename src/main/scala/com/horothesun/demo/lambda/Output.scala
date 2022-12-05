@@ -5,7 +5,7 @@ import Models._
 
 object Output {
 
-  def getResponse(
+  def createResponse(
       statusCode: StatusCode,
       body: String,
       bodyEncoding: BodyEncoding

@@ -1,38 +1,39 @@
 package com.horothesun.demo.lambda
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent
-import Models.BodyEncoding._
 import munit.FunSuite
+import Input._
+import Models.BodyEncoding._
 
 class InputTest extends FunSuite {
 
-  test("getBody from base64 encoded body") {
+  test("getDecodedBody from base64 encoded body") {
     val e = APIGatewayV2HTTPEvent
       .builder()
       .withBody("YWJj")
       .withIsBase64Encoded(true)
       .build()
-    assertEquals(Input.getBody(e), Some("abc"))
+    assertEquals(getDecodedBody(e), Some("abc"))
   }
 
-  test("bodyFromEvent with null body returns None") {
+  test("getBody with null body returns None") {
     val e = APIGatewayV2HTTPEvent.builder().withBody(null).build()
-    assertEquals(Input.bodyFromEvent(e), None)
+    assertEquals(getBody(e), None)
   }
 
-  test("bodyFromEvent with 'abc' body returns Some('abc')") {
+  test("getBody with 'abc' body returns Some('abc')") {
     val e = APIGatewayV2HTTPEvent.builder().withBody("abc").build()
-    assertEquals(Input.bodyFromEvent(e), Some("abc"))
+    assertEquals(getBody(e), Some("abc"))
   }
 
-  test("bodyEncodingFromEvent with true isBase64Encoded value returns Base64") {
+  test("getBodyEncoding with true isBase64Encoded value returns Base64Encoding") {
     val e = APIGatewayV2HTTPEvent.builder().withIsBase64Encoded(true).build()
-    assertEquals(Input.bodyEncodingFromEvent(e), Base64Encoding)
+    assertEquals(getBodyEncoding(e), Base64Encoding)
   }
 
-  test("bodyEncodingFromEvent with false isBase64Encoded value returns None") {
+  test("getBodyEncoding with false isBase64Encoded value returns NoEncoding") {
     val e = APIGatewayV2HTTPEvent.builder().withIsBase64Encoded(false).build()
-    assertEquals(Input.bodyEncodingFromEvent(e), NoEncoding)
+    assertEquals(getBodyEncoding(e), NoEncoding)
   }
 
 }

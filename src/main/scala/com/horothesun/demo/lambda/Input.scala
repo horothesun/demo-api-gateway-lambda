@@ -6,14 +6,15 @@ import Models.BodyEncoding._
 
 object Input {
 
-  def getBody(event: APIGatewayV2HTTPEvent): Option[String] =
-    bodyFromEvent(event)
-      .flatMap(body => bodyEncodingFromEvent(event).decode(body))
+  def getDecodedBody(event: APIGatewayV2HTTPEvent): Option[String] =
+    getBody(event)
+      .flatMap(getBodyEncoding(event).decode)
 
-  def bodyFromEvent(event: APIGatewayV2HTTPEvent): Option[String] =
+  def getBody(event: APIGatewayV2HTTPEvent): Option[String] =
     Option(event.getBody)
 
-  def bodyEncodingFromEvent(event: APIGatewayV2HTTPEvent): BodyEncoding =
-    if (event.getIsBase64Encoded) Base64Encoding else NoEncoding
+  def getBodyEncoding(event: APIGatewayV2HTTPEvent): BodyEncoding =
+    if (event.getIsBase64Encoded) Base64Encoding
+    else NoEncoding
 
 }
