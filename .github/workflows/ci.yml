@@ -22,46 +22,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-  non-blocking-checks:
-    name: Non-blocking checks
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    defaults:
-      run:
-        shell: "bash"
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Get JDK version
-        run: |
-          source scripts/get_java_version.sh
-          echo "JAVA_VERSION=${JAVA_VERSION}" >> "${GITHUB_ENV}"
-
-      - name: Get sbt version
-        run: |
-          source scripts/get_sbt_version.sh
-          echo "SBT_VERSION=${SBT_VERSION}" >> "${GITHUB_ENV}"
-
-      - name: Set up JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: "adopt"
-
-      - name: Scalafmt check
-        run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
-
-      - name: Run tests
-        run: sbt test IntegrationTest/test
-
   build-test-push:
     name: Build, test and push
     runs-on: ubuntu-latest
-    timeout-minutes: 8
-    defaults:
-      run:
-        shell: "bash"
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
 
@@ -88,6 +52,13 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: "adopt"
+
+      - name: Scalafmt check
+        run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
+
+      # building the image also performs unit and integration tests
+      # - name: Run tests
+      #   run: sbt test IntegrationTest/test
 
       - name: Build image
         run: ./scripts/build_docker_image.sh
