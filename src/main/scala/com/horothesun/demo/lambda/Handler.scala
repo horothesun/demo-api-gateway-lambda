@@ -5,12 +5,13 @@ import cats.effect.{IO, Resource}
 import com.amazonaws.services.lambda.runtime._
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo._
+import com.horothesun.demo.Models.Input
 import lambda.Models.BodyEncoding._
 import lambda.Models.StatusCode
-import lambda.Output._
+import lambda.HandlerOutput._
 import scala.jdk.CollectionConverters._
 import Handler._
-import Input._
+import HandlerInput._
 
 class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResponse] {
 
@@ -25,25 +26,33 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
 
     val decodedBody = getDecodedBody(event)
     for {
-      env <- getEnvVars
-      _   <- logLn(showEnvVars(env))
-      _   <- logLn(showContext(context))
-      _   <- logLn(showEvent(event))
-      _   <- logLn(showDecodedBody(decodedBody))
-      result <- dependencies.use { clock =>
-        Logic(clock).appLogic
-      }
-      response = createResponse(StatusCode.Ok, result, Base64)
-      _ <- logLn(showResponse(response))
+      env      <- getEnvVars
+      _        <- logLn(showEnvVars(env))
+      _        <- logLn(showContext(context))
+      _        <- logLn(showEvent(event))
+      _        <- logLn(showDecodedBody(decodedBody))
+      response <- getResponse(decodedBody)
+      _        <- logLn(showResponse(response))
     } yield response
   }
-
-  def dependencies: Resource[IO, Clock] =
-    Resource.pure[IO, Clock](Clock.create)
 
 }
 
 object Handler {
+
+  lazy val decodeInputBodyErrorResponse: APIGatewayV2HTTPResponse =
+    createResponse(StatusCode.BadRequest, "Error: couldn't decode input body!", Base64)
+
+  def getResponse(decodedBody: Option[Input]): IO[APIGatewayV2HTTPResponse] =
+    decodedBody
+      .fold(IO.pure(decodeInputBodyErrorResponse))(b =>
+        dependencies
+          .use(clock => Logic(clock).appLogic(b))
+          .map(createResponse(StatusCode.Ok, _, Base64))
+      )
+
+  def dependencies: Resource[IO, Clock] =
+    Resource.pure[IO, Clock](Clock.create)
 
   def getEnvVars: IO[Map[String, String]] =
     IO(System.getenv.asScala.toMap)
@@ -69,8 +78,8 @@ object Handler {
   def showEvent(event: APIGatewayV2HTTPEvent): String =
     s"EVENT: ${event.toString}"
 
-  def showDecodedBody(body: Option[String]): String =
-    body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: $b")
+  def showDecodedBody(body: Option[Input]): String =
+    body.fold("MISSING BODY: couldn't decode input body!")(b => s"BODY: ${b.value}")
 
   def showResponse(response: APIGatewayV2HTTPResponse): String =
     s"RESPONSE: $response"

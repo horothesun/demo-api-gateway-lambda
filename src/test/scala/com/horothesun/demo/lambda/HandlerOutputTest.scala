@@ -3,9 +3,9 @@ package com.horothesun.demo.lambda
 import munit.FunSuite
 import Models.StatusCode
 import Models.BodyEncoding._
-import Output._
+import HandlerOutput._
 
-class OutputTest extends FunSuite {
+class HandlerOutputTest extends FunSuite {
 
   test("createResponse with plain-text body") {
     val body = "{\"hello\":\"world\"}"

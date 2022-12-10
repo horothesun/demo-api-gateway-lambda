@@ -4,7 +4,7 @@ import com.amazonaws.services.lambda.runtime.events._
 import Models._
 import Models.BodyEncoding._
 
-object Output {
+object HandlerOutput {
 
   def createResponse(
       statusCode: StatusCode,

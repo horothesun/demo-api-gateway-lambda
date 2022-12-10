@@ -1,11 +1,12 @@
 package com.horothesun.demo.lambda
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayV2HTTPEvent
+import com.horothesun.demo.Models.Input
 import munit.FunSuite
-import Input._
+import HandlerInput._
 import Models.BodyEncoding._
 
-class InputTest extends FunSuite {
+class HandlerInputTest extends FunSuite {
 
   test("getDecodedBody from base64 encoded body") {
     val e = APIGatewayV2HTTPEvent
@@ -13,7 +14,7 @@ class InputTest extends FunSuite {
       .withBody("YWJj")
       .withIsBase64Encoded(true)
       .build()
-    assertEquals(getDecodedBody(e), Some("abc"))
+    assertEquals(getDecodedBody(e), Some(Input("abc")))
   }
 
   test("getBody with null body returns None") {
