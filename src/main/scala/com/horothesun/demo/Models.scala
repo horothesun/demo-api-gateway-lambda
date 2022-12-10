@@ -6,6 +6,9 @@ object Models {
 
   case class Input(value: String)
 
-  case class DateTimeBody(server_date_time: LocalDateTime)
+  sealed trait Output
+  object Output {
+    case class DateTimeBody(server_date_time: LocalDateTime) extends Output
+  }
 
 }

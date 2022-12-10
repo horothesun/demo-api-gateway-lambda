@@ -6,8 +6,8 @@ import com.amazonaws.services.lambda.runtime._
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo._
 import com.horothesun.demo.Models.Input
+import lambda.Models._
 import lambda.Models.BodyEncoding._
-import lambda.Models.StatusCode
 import lambda.HandlerOutput._
 import scala.jdk.CollectionConverters._
 import Handler._
@@ -40,15 +40,17 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
 
 object Handler {
 
+  val responseEncoding: BodyEncoding = Base64
+
   lazy val decodeInputBodyErrorResponse: APIGatewayV2HTTPResponse =
-    createResponse(StatusCode.BadRequest, "Error: couldn't decode input body!", Base64)
+    createResponse(StatusCode.BadRequest, "Error: couldn't decode input body!", responseEncoding)
 
   def getResponse(decodedBody: Option[Input]): IO[APIGatewayV2HTTPResponse] =
     decodedBody
       .fold(IO.pure(decodeInputBodyErrorResponse))(b =>
         dependencies
           .use(clock => Logic(clock).appLogic(b))
-          .map(createResponse(StatusCode.Ok, _, Base64))
+          .map(createResponse(_, responseEncoding))
       )
 
   def dependencies: Resource[IO, Clock] =

@@ -7,15 +7,16 @@ import org.scalacheck.Gen
 import org.scalacheck.Prop._
 import LogicSuite._
 import Models.Input
+import Models.Output.DateTimeBody
 
 class LogicSuite extends CatsEffectSuite with ScalaCheckSuite {
 
-  property("app logic returns correct local date-time JSON string for all inputs") {
+  property("app logic returns correct local date-time for all inputs") {
     forAll(inputGen) { in =>
-      val fakeLocalDateTime = LocalDateTime.of(2022, Month.APRIL, 15, 13, 33, 0)
-      Logic(clockStub(fakeLocalDateTime))
+      val localDateTime = LocalDateTime.of(2022, Month.APRIL, 15, 13, 33, 0)
+      Logic(clockStub(localDateTime))
         .appLogic(in)
-        .assertEquals("{\"server_date_time\":\"2022-04-15T13:33:00\"}")
+        .assertEquals(DateTimeBody(localDateTime))
         .unsafeRunSync()
     }
   }
