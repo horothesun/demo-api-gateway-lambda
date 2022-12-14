@@ -43,7 +43,11 @@ object Handler {
   val responseEncoding: BodyEncoding = Base64
 
   lazy val decodeInputBodyErrorResponse: APIGatewayV2HTTPResponse =
-    createResponse(StatusCode.BadRequest, "Error: couldn't decode input body!", responseEncoding)
+    createResponse(
+      StatusCode.BadRequest,
+      "{\"error\":\"Couldn't decode input body!\"}",
+      responseEncoding
+    )
 
   def getResponse(decodedBody: Option[Input]): IO[APIGatewayV2HTTPResponse] =
     decodedBody
