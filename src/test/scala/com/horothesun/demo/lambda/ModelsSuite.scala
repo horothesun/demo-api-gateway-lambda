@@ -5,7 +5,7 @@ import org.scalacheck.Gen
 import org.scalacheck.Prop._
 import Models.BodyEncoding._
 
-class ModelsTest extends ScalaCheckSuite {
+class ModelsSuite extends ScalaCheckSuite {
 
   property("NoEncoding.decode == Some[String]") {
     forAll(Gen.asciiPrintableStr) { s =>

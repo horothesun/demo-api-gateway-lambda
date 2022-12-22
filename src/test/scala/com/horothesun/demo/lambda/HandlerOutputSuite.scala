@@ -7,7 +7,7 @@ import Models._
 import Models.BodyEncoding._
 import HandlerOutput._
 
-class HandlerOutputTest extends FunSuite {
+class HandlerOutputSuite extends FunSuite {
 
   test("createResponse with DateTimeBody and NoEncoding") {
     val body = DateTimeBody(LocalDateTime.of(2022, Month.APRIL, 15, 13, 33, 0))

@@ -6,7 +6,7 @@ import munit.FunSuite
 import HandlerInput._
 import Models.BodyEncoding._
 
-class HandlerInputTest extends FunSuite {
+class HandlerInputSuite extends FunSuite {
 
   test("getDecodedBody from base64 encoded body") {
     val e = APIGatewayV2HTTPEvent
