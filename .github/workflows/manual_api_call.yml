@@ -4,7 +4,6 @@ on:
   workflow_dispatch: # enable manual execution
 
 env:
-  DEFAULT_SHELL: "bash"
   PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
 
 jobs:
@@ -12,9 +11,6 @@ jobs:
     name: Manual API call
     runs-on: ubuntu-latest
     timeout-minutes: 1
-    defaults:
-      run:
-        shell: ${{ env.DEFAULT_SHELL }}
     steps:
     - name: API call
       run: |
