@@ -1,6 +1,6 @@
 # Demo API Gateway triggered Lambda
 
-[![CI](https://github.com/horothesun/demo-api-gateway-lambda/workflows/CI/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
+[![CI](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
 [![ECR cleanup](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ecr_cleanup.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ecr_cleanup.yml)
 [![Manual API call](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml)
 
