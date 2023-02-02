@@ -1,7 +1,7 @@
 package com.horothesun.demo.lambda
 
 import cats.effect.unsafe.implicits.global
-import cats.effect.{IO, Resource}
+import cats.effect.IO
 import com.amazonaws.services.lambda.runtime._
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo._
@@ -22,17 +22,16 @@ class Handler extends RequestHandler[APIGatewayV2HTTPEvent, APIGatewayV2HTTPResp
     run(event, context).unsafeRunSync()
 
   def run(event: APIGatewayV2HTTPEvent, context: Context): IO[APIGatewayV2HTTPResponse] = {
-    implicit val logger: LambdaLogger = context.getLogger
-
+    val log         = Logger.create(context.getLogger)
     val decodedBody = getDecodedBody(event)
     for {
       env      <- getEnvVars
-      _        <- logLn(showEnvVars(env))
-      _        <- logLn(showContext(context))
-      _        <- logLn(showEvent(event))
-      _        <- logLn(showDecodedBody(decodedBody))
-      response <- getResponse(decodedBody)
-      _        <- logLn(showResponse(response))
+      _        <- log.info(showEnvVars(env))
+      _        <- log.info(showContext(context))
+      _        <- log.info(showEvent(event))
+      _        <- log.info(showDecodedBody(decodedBody))
+      response <- getResponse(log, decodedBody)
+      _        <- log.info(showResponse(response))
     } yield response
   }
 
@@ -43,28 +42,19 @@ object Handler {
   val responseEncoding: BodyEncoding = Base64
 
   lazy val decodeInputBodyErrorResponse: APIGatewayV2HTTPResponse =
-    createResponse(
-      StatusCode.BadRequest,
-      "{\"error\":\"Couldn't decode input body!\"}",
+    createBadRequestResponse(
+      BadRequestError("Lambda handler: Couldn't decode input body!"),
       responseEncoding
     )
 
-  def getResponse(decodedBody: Option[Input]): IO[APIGatewayV2HTTPResponse] =
+  def getResponse(log: Logger, decodedBody: Option[Input]): IO[APIGatewayV2HTTPResponse] =
     decodedBody
-      .fold(IO.pure(decodeInputBodyErrorResponse))(b =>
-        dependencies
-          .use(clock => Logic(clock).appLogic(b))
-          .map(createResponse(_, responseEncoding))
+      .fold(IO.pure(decodeInputBodyErrorResponse))(in =>
+        Logic(log).appLogic(in).map(createResponse(_, responseEncoding))
       )
-
-  def dependencies: Resource[IO, Clock] =
-    Resource.pure[IO, Clock](Clock.create)
 
   def getEnvVars: IO[Map[String, String]] =
     IO(System.getenv.asScala.toMap)
-
-  def logLn(s: => String)(implicit logger: LambdaLogger): IO[Unit] =
-    IO(logger.log(s"$s\n"))
 
   def showEnvVars(env: Map[String, String]): String =
     "ENVIRONMENT VARIABLES: " + env.mkString("[\n  ", "\n  ", "\n]")

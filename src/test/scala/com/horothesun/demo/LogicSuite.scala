@@ -11,11 +11,11 @@ import Models.Output.DateTimeBody
 
 class LogicSuite extends CatsEffectSuite with ScalaCheckSuite {
 
-  property("app logic returns correct local date-time for all inputs") {
+  property("getOutput returns correct local date-time for all inputs") {
     forAll(inputGen) { in =>
       val localDateTime = LocalDateTime.of(2022, Month.APRIL, 15, 13, 33, 0)
-      Logic(clockStub(localDateTime))
-        .appLogic(in)
+      Logic
+        .getOutput(clockStub(localDateTime))(in)
         .assertEquals(DateTimeBody(localDateTime))
         .unsafeRunSync()
     }
@@ -27,7 +27,7 @@ object LogicSuite {
 
   val inputGen: Gen[Input] = Gen.asciiStr.map(Input)
 
-  def clockStub(localDateTime: LocalDateTime): Clock = new Clock {
+  def clockStub(localDateTime: LocalDateTime): ClockClient = new ClockClient {
     override def currentDateTime: IO[LocalDateTime] = IO.pure(localDateTime)
   }
 

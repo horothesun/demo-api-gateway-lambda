@@ -1,5 +1,7 @@
 import sbtassembly.MergeStrategy
 
+scalacOptions += "-Xfatal-warnings"
+
 ThisBuild / organization     := "com.horothesun"
 ThisBuild / organizationName := "horothesun"
 ThisBuild / scalaVersion     := "2.13.10"

@@ -1,6 +1,7 @@
 # Demo API Gateway triggered Lambda
 
 [![CI](https://github.com/horothesun/demo-api-gateway-lambda/workflows/CI/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
+[![ECR cleanup](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ecr_cleanup.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ecr_cleanup.yml)
 [![Manual API call](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml)
 
 Based on API Gateway's
@@ -22,7 +23,17 @@ Secrets
 - `LAMBDA_NAME`
 - `PROD_CI_ROLE_ARN`
 
-## API call
+## ECR cleanup
+
+Delete all untagged ECR images except the most recent one.
+
+### Secrets
+
+- `AWS_REGION`
+- `ECR_REPO_NAME`
+- `PROD_CI_ROLE_ARN`
+
+## Manual API call
 
 Secrets
 
@@ -35,7 +46,7 @@ Build an image with
 ```bash
 docker build --tag "<REPOSITORY:TAG>" \
   --build-arg "JAVA_VERSION=11" \
-  --build-arg "SBT_VERSION=1.8.0" \
+  --build-arg "SBT_VERSION=1.8.2" \
   --file "./Dockerfile" "."
 ```
 

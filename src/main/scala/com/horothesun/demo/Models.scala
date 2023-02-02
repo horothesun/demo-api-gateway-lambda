@@ -8,6 +8,9 @@ object Models {
 
   sealed trait Output
   object Output {
+    case class InputParsingError(message: String) extends Output {
+      def obfuscated: String = toString
+    }
     case class DateTimeBody(server_date_time: LocalDateTime) extends Output
   }
 
