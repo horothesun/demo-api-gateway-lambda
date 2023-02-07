@@ -3,7 +3,7 @@ ARG JAVA_VERSION=11
 
 # BUILDER
 
-FROM openjdk:${JAVA_VERSION}-jre-slim-buster as builder
+FROM eclipse-temurin:${JAVA_VERSION}-jdk-jammy as builder
 
 ARG SBT_VERSION=1.8.2
 
