@@ -32,4 +32,11 @@ class HandlerOutputSuite extends FunSuite {
     assertEquals(r.getIsBase64Encoded, true)
   }
 
+  test("createBadRequestResponse with plain-text body") {
+    val r = createBadRequestResponse(BadRequestError("test-body"), NoEncoding)
+    assertEquals(r.getStatusCode, 400)
+    assertEquals(r.getBody, """{"error":"test-body"}""")
+    assertEquals(r.getIsBase64Encoded, false)
+  }
+
 }
