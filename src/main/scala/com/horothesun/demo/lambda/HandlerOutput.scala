@@ -3,7 +3,6 @@ package com.horothesun.demo.lambda
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo.Models.Output
 import com.horothesun.demo.Models.Output._
-import io.circe.generic.auto._
 import io.circe.syntax._
 import Models._
 import Models.BodyEncoding._

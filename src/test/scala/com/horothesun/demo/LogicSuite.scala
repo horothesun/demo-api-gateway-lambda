@@ -27,7 +27,7 @@ object LogicSuite {
 
   val inputGen: Gen[Input] = Gen.asciiStr.map(Input)
 
-  def clockStub(localDateTime: LocalDateTime): ClockClient = new ClockClient {
+  def clockStub(localDateTime: LocalDateTime): Clock = new Clock {
     override def currentDateTime: IO[LocalDateTime] = IO.pure(localDateTime)
   }
 

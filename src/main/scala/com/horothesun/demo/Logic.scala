@@ -15,10 +15,10 @@ case class Logic(log: Logger) {
 
 object Logic {
 
-  def getOutput(clock: ClockClient)(input: Input): IO[Output] =
-    clock.currentDateTime.map(DateTimeBody)
+  def getOutput(clock: Clock)(input: Input): IO[Output] =
+    clock.currentDateTime.map(DateTimeBody.apply)
 
-  def getClients: Resource[IO, ClockClient] =
-    IO(ClockClient.create).toResource
+  def getClients: Resource[IO, Clock] =
+    IO(Clock.create).toResource
 
 }

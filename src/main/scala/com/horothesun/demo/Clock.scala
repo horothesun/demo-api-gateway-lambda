@@ -3,13 +3,13 @@ package com.horothesun.demo
 import cats.effect.IO
 import java.time._
 
-trait ClockClient {
+trait Clock {
   def currentDateTime: IO[LocalDateTime]
 }
 
-object ClockClient {
+object Clock {
 
-  def create: ClockClient = new ClockClient {
+  def create: Clock = new Clock {
     override def currentDateTime: IO[LocalDateTime] =
       cats.effect
         .Clock[IO]
