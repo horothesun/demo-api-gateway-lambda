@@ -6,7 +6,7 @@ object Dependencies {
   object Version {
     val catsEffect       = "3.4.8"
     val betterMonadicFor = "0.3.1"
-    val circe            = "0.14.4"
+    val circe            = "0.14.5"
     val awsLambdaCore    = "1.2.2"
     val awsLambdaEvents  = "3.11.0"
     val logbackClassic   = "1.4.5"
