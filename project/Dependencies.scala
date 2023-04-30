@@ -15,9 +15,7 @@ object Dependencies {
   }
 
   lazy val project: Seq[ModuleID] = Seq(
-    "org.typelevel" %% "cats-effect"        % Version.catsEffect,
-    "org.typelevel" %% "cats-effect-kernel" % Version.catsEffect,
-    "org.typelevel" %% "cats-effect-std"    % Version.catsEffect,
+    "org.typelevel" %% "cats-effect" % Version.catsEffect,
     compilerPlugin("com.olegpy" %% "better-monadic-for" % Version.betterMonadicFor),
     "io.circe"     %% "circe-core"             % Version.circe,
     "io.circe"     %% "circe-generic"          % Version.circe,
