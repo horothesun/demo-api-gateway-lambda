@@ -5,7 +5,7 @@ ARG JAVA_VERSION=17
 
 FROM eclipse-temurin:${JAVA_VERSION}-jdk-jammy as builder
 
-ARG SBT_VERSION=1.8.3
+ARG SBT_VERSION=1.9.0
 
 # install dependencies
 RUN apt-get update && apt-get install -y curl bash tar ca-certificates make git procps \
