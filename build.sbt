@@ -11,12 +11,10 @@ val projectName = "demo-api-gateway-lambda"
 lazy val root = project
   .in(file("."))
   .settings(name := projectName)
-  .configs(IntegrationTest)
-  .settings(Defaults.itSettings)
   .settings(Dependencies.core)
   .settings(
     assembly / test := Def
-      .sequential(Test / test, IntegrationTest / test)
+      .sequential(Test / test)
       .value,
     assembly / assemblyMergeStrategy := customMergeStrategy,
     assembly / assemblyJarName       := s"$projectName.jar"
@@ -28,5 +26,3 @@ val customMergeStrategy: String => MergeStrategy = {
   // https://stackoverflow.com/questions/46287789/running-an-uber-jar-from-sbt-assembly-results-in-error-could-not-find-or-load-m
   case _ => MergeStrategy.first
 }
-
-IntegrationTest / parallelExecution := false
