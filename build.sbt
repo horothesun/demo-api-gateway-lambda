@@ -4,7 +4,7 @@ scalacOptions += "-Xfatal-warnings"
 
 ThisBuild / organization     := "com.horothesun"
 ThisBuild / organizationName := "horothesun"
-ThisBuild / scalaVersion     := "2.13.10"
+ThisBuild / scalaVersion     := "2.13.11"
 
 val projectName = "demo-api-gateway-lambda"
 
