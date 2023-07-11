@@ -45,8 +45,8 @@ Build an image with
 
 ```bash
 docker build --tag "<REPOSITORY:TAG>" \
-  --build-arg "JAVA_VERSION=17" \
-  --build-arg "SBT_VERSION=1.9.1" \
+  --build-arg "JAVA_VERSION=..." \
+  --build-arg "SBT_VERSION=..." \
   --file "./Dockerfile" "."
 ```
 
