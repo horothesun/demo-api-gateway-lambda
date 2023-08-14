@@ -77,3 +77,7 @@ jobs:
       - name: Update lambda
         if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
         run: ./scripts/update_lambda_image_uri.sh
+
+      - name: ECR cleanup
+        if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
+        run: ./scripts/ecr_cleanup.sh
