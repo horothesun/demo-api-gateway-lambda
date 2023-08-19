@@ -7,7 +7,7 @@ object Dependencies {
     val catsEffect       = "3.5.1"
     val betterMonadicFor = "0.3.1"
     val circe            = "0.14.5"
-    val awsLambdaCore    = "1.2.2"
+    val awsLambdaCore    = "1.2.3"
     val awsLambdaEvents  = "3.11.2"
     val logbackClassic   = "1.4.11"
     val munitScalaCheck  = "0.7.29"
