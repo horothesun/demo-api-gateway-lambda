@@ -9,7 +9,7 @@ object Dependencies {
     val circe            = "0.14.6"
     val awsLambdaCore    = "1.2.3"
     val awsLambdaEvents  = "3.11.3"
-    val logbackClassic   = "1.4.11"
+    val logbackClassic   = "1.4.12"
     val munitScalaCheck  = "0.7.29"
     val munitCatsEffect  = "1.0.7"
   }
