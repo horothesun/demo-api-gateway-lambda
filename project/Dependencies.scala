@@ -4,14 +4,23 @@ import sbt.Keys.libraryDependencies
 object Dependencies {
 
   object Version {
-    val catsEffect       = "3.5.2"
+
+    val catsEffect = "3.5.2"
+
     val betterMonadicFor = "0.3.1"
-    val circe            = "0.14.6"
-    val awsLambdaCore    = "1.2.3"
-    val awsLambdaEvents  = "3.11.4"
-    val logbackClassic   = "1.4.13"
-    val munitScalaCheck  = "0.7.29"
-    val munitCatsEffect  = "1.0.7"
+
+    val circe = "0.14.6"
+
+    val awsLambdaCore = "1.2.3"
+
+    val awsLambdaEvents = "3.11.4"
+
+    val logbackClassic = "1.4.14"
+
+    val munitScalaCheck = "0.7.29"
+
+    val munitCatsEffect = "1.0.7"
+
   }
 
   lazy val project: Seq[ModuleID] = Seq(
