@@ -3,6 +3,7 @@
 [![CI](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ci.yml)
 [![ECR cleanup](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ecr_cleanup.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/ecr_cleanup.yml)
 [![Manual API call](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml/badge.svg)](https://github.com/horothesun/demo-api-gateway-lambda/actions/workflows/manual_api_call.yml)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg?style=flat-square)](https://renovatebot.com)
 
 Based on API Gateway's
 
