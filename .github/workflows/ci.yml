@@ -51,7 +51,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: "adopt"
+          distribution: "temurin"
 
       - name: Scalafmt check
         run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
