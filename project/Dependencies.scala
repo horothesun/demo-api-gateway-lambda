@@ -19,7 +19,7 @@ object Dependencies {
 
     val munitScalaCheck = "0.7.29"
 
-    val munitCatsEffect = "1.0.7"
+    val munitCatsEffect = "2.0.0"
 
   }
 
@@ -37,8 +37,8 @@ object Dependencies {
   )
 
   lazy val test: Seq[ModuleID] = Seq(
-    "org.scalameta" %% "munit-scalacheck"    % Version.munitScalaCheck % Test,
-    "org.typelevel" %% "munit-cats-effect-3" % Version.munitCatsEffect % Test
+    "org.scalameta" %% "munit-scalacheck"  % Version.munitScalaCheck % Test,
+    "org.typelevel" %% "munit-cats-effect" % Version.munitCatsEffect % Test
   )
 
   lazy val core = libraryDependencies ++= (project ++ logs ++ test)
