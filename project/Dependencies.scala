@@ -13,7 +13,7 @@ object Dependencies {
 
     val awsLambdaCore = "1.2.3"
 
-    val awsLambdaEvents = "3.12.0"
+    val awsLambdaEvents = "3.13.0"
 
     val logbackClassic = "1.5.6"
 
