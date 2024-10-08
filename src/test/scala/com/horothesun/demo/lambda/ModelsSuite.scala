@@ -1,9 +1,9 @@
 package com.horothesun.demo.lambda
 
+import Models.BodyEncoding._
 import munit.ScalaCheckSuite
 import org.scalacheck.Gen
 import org.scalacheck.Prop._
-import Models.BodyEncoding._
 
 class ModelsSuite extends ScalaCheckSuite {
 

@@ -1,11 +1,11 @@
 package com.horothesun.demo.lambda
 
+import HandlerOutput._
+import Models._
+import Models.BodyEncoding._
 import com.horothesun.demo.Models.Output._
 import java.time.{LocalDateTime, Month}
 import munit.FunSuite
-import Models._
-import Models.BodyEncoding._
-import HandlerOutput._
 
 class HandlerOutputSuite extends FunSuite {
 

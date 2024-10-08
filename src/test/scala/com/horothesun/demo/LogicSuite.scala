@@ -1,13 +1,13 @@
 package com.horothesun.demo
 
+import LogicSuite._
+import Models.Input
+import Models.Output.DateTimeBody
 import cats.effect.IO
 import java.time.{LocalDateTime, Month}
 import munit._
 import org.scalacheck.Gen
 import org.scalacheck.Prop._
-import LogicSuite._
-import Models.Input
-import Models.Output.DateTimeBody
 
 class LogicSuite extends CatsEffectSuite with ScalaCheckSuite {
 

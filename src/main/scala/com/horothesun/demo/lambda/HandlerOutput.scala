@@ -1,11 +1,11 @@
 package com.horothesun.demo.lambda
 
+import Models._
+import Models.BodyEncoding._
 import com.amazonaws.services.lambda.runtime.events._
 import com.horothesun.demo.Models.Output
 import com.horothesun.demo.Models.Output._
 import io.circe.syntax._
-import Models._
-import Models.BodyEncoding._
 
 object HandlerOutput {
 

@@ -1,9 +1,9 @@
 package com.horothesun.demo.lambda
 
-import com.amazonaws.services.lambda.runtime.events._
-import com.horothesun.demo.Models.Input
 import Models._
 import Models.BodyEncoding._
+import com.amazonaws.services.lambda.runtime.events._
+import com.horothesun.demo.Models.Input
 
 object HandlerInput {
 
