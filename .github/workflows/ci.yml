@@ -52,6 +52,9 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: "temurin"
+      - uses: sbt/setup-sbt@v1
+        with:
+          sbt-runner-version: ${{ env.SBT_VERSION }}
 
       - name: Scalafmt check
         run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
