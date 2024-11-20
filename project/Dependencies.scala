@@ -5,7 +5,7 @@ object Dependencies {
 
   object Version {
 
-    val catsEffect = "3.5.5"
+    val catsEffect = "3.5.6"
 
     val betterMonadicFor = "0.3.1"
 
