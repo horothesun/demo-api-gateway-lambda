@@ -11,7 +11,7 @@ object Dependencies {
 
     val circe = "0.14.13"
 
-    val awsLambdaCore = "1.2.3"
+    val awsLambdaCore = "1.3.0"
 
     val awsLambdaEvents = "3.15.0"
 
