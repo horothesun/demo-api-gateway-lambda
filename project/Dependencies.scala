@@ -9,7 +9,7 @@ object Dependencies {
 
     val betterMonadicFor = "0.3.1"
 
-    val circe = "0.14.14"
+    val circe = "0.14.15"
 
     val awsLambdaCore = "1.4.0"
 
