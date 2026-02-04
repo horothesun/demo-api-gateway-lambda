@@ -67,7 +67,7 @@ jobs:
         run: ./scripts/build_docker_image.sh
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         if: github.ref == 'refs/heads/master' && contains(fromJson('["push", "workflow_dispatch"]'), github.event_name)
         with:
           role-to-assume: ${{ secrets.PROD_CI_ROLE_ARN }}
