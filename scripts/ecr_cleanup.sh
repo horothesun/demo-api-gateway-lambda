@@ -10,7 +10,7 @@ IMAGE_DIGESTS_TO_DELETE=$(
         .imageDetails
       | sort_by(.imagePushedAt)
       | reverse
-      | del(.[0])
+      | del(.[:2])
       | map(.imageDigest)
     '
 )
