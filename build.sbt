@@ -13,9 +13,6 @@ lazy val root = project
   .settings(name := projectName)
   .settings(Dependencies.core)
   .settings(
-    assembly / test := Def
-      .sequential(Test / test)
-      .value,
     assembly / assemblyMergeStrategy := customMergeStrategy,
     assembly / assemblyJarName       := s"$projectName.jar"
   )
