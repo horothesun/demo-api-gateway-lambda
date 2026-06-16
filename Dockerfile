@@ -29,6 +29,6 @@ RUN sbt ";clean;assembly"
 
 FROM public.ecr.aws/lambda/java:${JAVA_VERSION}
 
-COPY --from=builder /work/target/out/jvm/scala-2.13.18/demo-api-gateway-lambda/demo-api-gateway-lambda.jar
+COPY --from=builder /work/target/out/jvm/scala-2.13.*/demo-api-gateway-lambda/demo-api-gateway-lambda.jar
 
 CMD ["com.horothesun.demo.lambda.Handler::handleRequest"]
