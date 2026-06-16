@@ -57,11 +57,10 @@ jobs:
           sbt-runner-version: ${{ env.SBT_VERSION }}
 
       - name: Scalafmt check
-        run: sbt scalafmtSbtCheck scalafmtCheck Test/scalafmtCheck
+        run: sbt ";scalafmtSbtCheck" ";scalafmtCheck" ";Test/scalafmtCheck"
 
-      # building the image also performs unit and integration tests
-      # - name: Run tests
-      #   run: sbt test IntegrationTest/test
+      - name: Run tests
+        run: sbt testFull
 
       - name: Build image
         run: ./scripts/build_docker_image.sh

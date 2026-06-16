@@ -22,7 +22,7 @@ WORKDIR /work
 
 # compile
 COPY . /work
-RUN sbt clean assembly
+RUN sbt ";clean;assembly"
 
 
 # RUNNER
