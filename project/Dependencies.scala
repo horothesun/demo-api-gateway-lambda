@@ -15,7 +15,7 @@ object Dependencies {
 
     val awsLambdaEvents = "3.16.1"
 
-    val logbackClassic = "1.5.38"
+    val logbackClassic = "1.6.0"
 
     val munitScalaCheck = "1.3.0"
 
